@@ -3,7 +3,7 @@
 using System;
 using System.Text;
 using static CGA.CGA; // static variable acces
-
+using UnityEngine;
 namespace CGA
 {
 	public class CGA
@@ -655,12 +655,35 @@ namespace CGA
 		public static CGA eo = e4+e5;
 		public static CGA ei = (e5-e4)*0.5f;
 		
-		// create a point from x,y,z coordinates
+		// up and down functions
 		public static CGA up (float x, float y, float z) { 
 		  float d = x*x + y*y + z*z;
 		  return x*e1 + y*e2 + z*e3 + 0.5f*d*ei + eo;
 		}
+		public static CGA normalise_pnt_minus_one(CGA pnt){
+        return (pnt*(-1.0f/(pnt|ei)[0]));
+    	}
 
+		public static CGA down(CGA pnt){
+        CGA normed_p = normalise_pnt_minus_one(pnt);
+        return normed_p[1]*e1 + normed_p[2]*e2 + normed_p[3]*e3;
+    	}
+
+		// Convert between types: Vectors, CGA points and Quaternions.
+		public static Vector3 pnt_to_vector(CGA pnt){
+        return new Vector3(pnt[1], pnt[2], pnt[3]);
+    	}
+
+		public static CGA vector_to_pnt(Vector3 vec){
+        return vec.x*e1 + vec.y*e2 + vec.z*e3;
+    	}
+
+		public static Quaternion vector_to_euler(Vector3 vec){
+        //Return the new Quaternion
+        return new Quaternion(vec.x, vec.y , vec.z, 1);
+    	}
+
+		// Define the Rotors here?
 		
 		/// string cast
 		public override string ToString()
