@@ -23,8 +23,8 @@ public class motion_regulator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float theta = 0.05f;
-        float alpha = 0.003f;
+        float theta = 0.005f;
+        float alpha = 0.0003f;
         CGA.CGA R =  GenerateRotationRotor(theta);
         CGA.CGA R2 =  GenerateDilationRotor(alpha);
         CGA.CGA pos_pnt = up(transform.position.x, 
