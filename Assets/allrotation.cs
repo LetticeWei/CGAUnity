@@ -54,30 +54,6 @@ public class allrotation : MonoBehaviour
         var downx = down(X);
         transform.position = pnt_to_vector(downx);
         
-        //with rotation in position as well
-        
-        // CGA.CGA R2 =  GenerateRotationRotor(theta,e3,e1);
-        // CGA.CGA pos_pnt = up(transform.position.x, 
-        //                     transform.position.y, 
-        //                     transform.position.z);
-        // var X2 = R2*pos_pnt*R2.Conjugate();
-        // var downx = down(X2);
-        // transform.position = pnt_to_vector(downx);
-        
-
-        //Another type of eular rotation
-
-        // CGA.CGA t = 0.01f*e3;
-        // CGA.CGA R = GenerateTranslationRotor(t);
-        // CGA.CGA pos_pnt = up(transform.rotation.x, 
-        //                     transform.rotation.y, 
-        //                     transform.rotation.z);
-        // var X = R*pos_pnt*~R;
-        // var downx = down(X);
-        // var eular_vector = pnt_to_vector(downx);
-        // transform.rotation=vector_to_euler(eular_vector);
-
-
         
         }
 }

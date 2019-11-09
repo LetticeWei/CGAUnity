@@ -8,9 +8,7 @@ public class cgamovement : MonoBehaviour
 {
     public CGA.CGA GenerateTranslationRotor(CGA.CGA mv){
         return 1 + 0.5f*ei*mv;
-    }
-
-
+}
 
     // Start is called before the first frame update
     void Start()
