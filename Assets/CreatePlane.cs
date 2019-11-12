@@ -15,6 +15,7 @@ public class CreatePlane : MonoBehaviour
         return 1 + 0.5f*ei*mv;
     }
 
+
     public Quaternion RotorToQuat(CGA.CGA R){
         return new Quaternion(R[10], R[7], R[6], R[0]);
     }
@@ -24,39 +25,45 @@ public class CreatePlane : MonoBehaviour
         var A = up(a.x, a.y, a.z);
         var B = up(b.x, b.y, b.z);
         var C = up(c.x, c.y, c.z);
-        var Plane5D = A ^ B ^ C ^ eo;
+        var Plane5D = A ^ B ^ C ^ ei;
         return Plane5D;
     }
     public float GetPlaneDist(CGA.CGA Plane5D){
-        return  (float) (0.5f)*((!Plane5D)|ei)[0];
+        return  (float) (0.5f)*((!Plane5D.normalized())|eo)[0];
     }
     public CGA.CGA GenerateRotationRotor2(float theta,CGA.CGA eab){
         return (float)Math.Cos(theta/2)+ (float)Math.Sin(theta/2)*eab;
     }
 
     public Vector3 GetPlaneNormal(CGA.CGA Plane5D){
-        var n_roof=(!Plane5D)-0.5f*((!Plane5D)|ei)*eo;
+        var n_roof=(!Plane5D.normalized())-0.5f*((!Plane5D.normalized())|eo)*ei;
         return pnt_to_vector(n_roof);
     }
+    
+
     Renderer m_ObjectRenderer;
     void Start()
     {
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         // define three points to represent the plane.
-        var a = new Vector3(1f, 1f, 0);
-        var b = new Vector3(0, 1f, 1f);
-        var c = new Vector3(-1f, 1f, 0);
+        var a = new Vector3(1f, 0, 0);
+        var b = new Vector3(0, 1f, 0);
+        var c = new Vector3(0, 0, 1f);
         
         //label the original x & y & z direction
         plane.transform.localScale = new Vector3 (1f, 2f, 3f); 
 
         //find the Plane, normal and dist.
-        var Plane5D=Create5DPlane(a,  b, c);
+        var Plane5D=Create5DPlane(a, b, c);
         var dist=GetPlaneDist(Plane5D);
         var n_roof=GetPlaneNormal(Plane5D); //n_roof=(A,B,C)
+        Debug.Log((!Plane5D));
+        Debug.Log((!Plane5D.normalized())*(!Plane5D.normalized()));
+        Debug.Log(2*dist);        
+        Debug.Log(n_roof);
+
         //rotation from old plane normal (0,0,1) to n_roof
         //rotation angle = the angle between (0,0,1) and (A,B,C)
-
         float scale_of_norm=Mathf.Sqrt(n_roof[0]*n_roof[0]+n_roof[1]*n_roof[1]+n_roof[2]*n_roof[2]);
         float theta= (float) Math.Acos(n_roof[2]/scale_of_norm);
         //rotation plane= the plane spaned by (0,0,1) and (A,B,C)
@@ -68,7 +75,7 @@ public class CreatePlane : MonoBehaviour
         plane.transform.rotation=new_Q;
 
         //define the translation vector
-        CGA.CGA d = vector_to_pnt(dist*n_roof/scale_of_norm);
+        CGA.CGA d = vector_to_pnt(2*dist*n_roof/scale_of_norm);
         CGA.CGA Rt = GenerateTranslationRotor(d);
         CGA.CGA pos_pnt = up(transform.position.x, 
                             transform.position.y, 

@@ -650,6 +650,7 @@ namespace CGA
 		public static CGA e4 = new CGA(1f, 4);
 		public static CGA e5 = new CGA(1f, 5);
 		
+		
 		// We seldomly work in the natural basis, but instead in a null basis
 		// for this we create two null vectors 'origin' and 'infinity'
 		public static CGA eo = e4+e5;
@@ -672,6 +673,11 @@ namespace CGA
 		// Convert between types: Vectors, CGA points and Quaternions.
 		public static Vector3 pnt_to_vector(CGA pnt){
         return new Vector3(pnt[1], pnt[2], pnt[3]);
+    	}
+
+		public static float pnt_to_scalar_pnt(CGA pnt){
+		double d = pnt[0];
+        return (float) d;
     	}
 
 		public static CGA vector_to_pnt(Vector3 vec){

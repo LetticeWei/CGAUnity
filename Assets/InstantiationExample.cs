@@ -24,7 +24,6 @@ public class InstantiationExample : MonoBehaviour
         var C = up(c.x, c.y, c.z);
         var D = up(d.x, d.y, d.z);
         var sigma = A ^ B ^ C ^ D;
-        //Debug.Log(A^sigma);
         return sigma;
     }
 
@@ -64,12 +63,7 @@ public class InstantiationExample : MonoBehaviour
         return Mathf.Sqrt(result);
     }
 
-    public CGA.CGA QuatToRotor(Quaternion q){
-        return q.w + q.x*(e2^e3) + q.y*(e1^e3) + q.z*(e1^e2);
-    }
-    public Quaternion RotorToQuat(CGA.CGA R){
-        return new Quaternion(R[10], R[7], R[6], R[0]);
-    }
+
     public CGA.CGA CircleByTwoSpheres(CGA.CGA sigma1, CGA.CGA sigma2)
     {
         //get all two blades
@@ -131,9 +125,6 @@ public class InstantiationExample : MonoBehaviour
         var CircleIntersect = CircleByTwoSpheres(sigma, sigma2);
         var Ccentre = findCentre(CircleIntersect);
         var Cradius = findCircleRadius(CircleIntersect);
-        Debug.Log(createIc(CircleIntersect));
-        Debug.Log(Ccentre);
-        Debug.Log(Cradius);
 
 
 
@@ -144,8 +135,6 @@ public class InstantiationExample : MonoBehaviour
         // var : GameObject  cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         // cube.transform.position = new Vector3(0, 0.5f, 0);
         // cube.transform.localScale = new Vector3 (1.25f, 1.5f, 1f);
-        //Debug.Log(!(e1*e2));
-        
 
     
     }
