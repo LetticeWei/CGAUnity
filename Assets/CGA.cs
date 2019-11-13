@@ -679,6 +679,17 @@ namespace CGA
 		double d = pnt[0];
         return (float) d;
     	}
+		public static CGA QuatToRotor(Quaternion q){
+        return q.w + q.x*(e2^e3) + q.y*(e1^e3) + q.z*(e1^e2);
+    	}
+
+		public static CGA GenerateTranslationRotor(CGA mv){
+        return 1 + 0.5f*ei*mv;
+    	}
+
+		public static Quaternion RotorToQuat(CGA R){
+        return new Quaternion(R[10], R[7], R[6], R[0]);
+    	}
 
 		public static CGA vector_to_pnt(Vector3 vec){
         return vec.x*e1 + vec.y*e2 + vec.z*e3;
