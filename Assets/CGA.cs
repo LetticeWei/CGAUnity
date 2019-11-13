@@ -653,13 +653,13 @@ namespace CGA
 		
 		// We seldomly work in the natural basis, but instead in a null basis
 		// for this we create two null vectors 'origin' and 'infinity'
-		public static CGA eo = e4+e5;
-		public static CGA ei = (e5-e4)*0.5f;
+		public static CGA ei = e4+e5;
+		public static CGA eo = (e4-e5)*0.5f;
 		
 		// up and down functions
 		public static CGA up (float x, float y, float z) { 
 		  float d = x*x + y*y + z*z;
-		  return x*e1 + y*e2 + z*e3 + 0.5f*d*ei + eo;
+		  return x*e1 + y*e2 + z*e3 + 0.5f*d*ei - eo;
 		}
 		public static CGA normalise_pnt_minus_one(CGA pnt){
         return (pnt*(-1.0f/(pnt|ei)[0]));

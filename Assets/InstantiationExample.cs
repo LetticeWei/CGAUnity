@@ -120,17 +120,17 @@ public class InstantiationExample : MonoBehaviour
     {
         // use four points to define a sphere
         var a = new Vector3(1f, 1f, 0);
-        var b = new Vector3(0, 1f, 1f);
+        var b = new Vector3(0, 1f, 5f);
         var c = new Vector3(-1f, 1f, 0);
-        var d = new Vector3(0, 5f, 0);
+        var d = new Vector3(0, 2f, 0);
         var e = new Vector3(0, -1f, 0);
-
-
-
+        var f = new Vector3(0, 2f, 0);
+        var g = new Vector3(0, 0, 3f);
+        var h = new Vector3(1f, 0, 0);
 
         //define a CGA sphere
         var sigma = GenerateGameObjSphere(a, b, c, d);
-        var sigma2 = GenerateGameObjSphere(a, b, c, e);
+        var sigma2 = GenerateGameObjSphere(e, f, g, h);
 
         var CircleIntersect = CircleByTwoSpheres(sigma, sigma2);
         var Ccentre = findCentre(CircleIntersect);
@@ -217,7 +217,7 @@ public class InstantiationExample : MonoBehaviour
         //rotation angle = the angle between (0,0,1) and (A,B,C)
         
         float scale_of_norm=Mathf.Sqrt(n_roof[0]*n_roof[0]+n_roof[1]*n_roof[1]+n_roof[2]*n_roof[2]);
-        float theta= (float) Math.Acos(-1*n_roof[1]/scale_of_norm);
+        float theta= (float) Math.Acos(n_roof[1]/scale_of_norm);
         //rotation plane= the plane spaned by (0,0,1) and (A,B,C)
         var rot_plane=e2^(n_roof[0]*e1+n_roof[1]*e2+n_roof[2]*e3);
         CGA.CGA R =  GenerateRotationRotor2(theta,rot_plane);

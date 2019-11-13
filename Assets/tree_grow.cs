@@ -9,7 +9,8 @@ public class tree_grow : MonoBehaviour
 {
     public CGA.CGA GenerateDilationRotor(float alpha){
         var eio=ei*eo;
-        return (float)Math.Cos(alpha)+ (float)Math.Sin(alpha)*eio;
+        float logalpha = (float)Math.Log(alpha);
+        return (float)Math.Cosh(logalpha/2)+ (float)Math.Sinh(logalpha/2)*eio;
     }
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,7 @@ public class tree_grow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float alpha = 0.003f;
+        float alpha = 0.95f;
         CGA.CGA R2 =  GenerateDilationRotor(alpha);
         CGA.CGA pos_pnt = up(transform.localScale .x, 
                             transform.localScale .y, 
