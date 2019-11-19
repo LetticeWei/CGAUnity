@@ -62,7 +62,7 @@ public class InstantiationExample : MonoBehaviour
     // another four points to define another sphere
     private static Vector3 pnt_e = new Vector3(1f, 0, 0.5f);
     private static Vector3 pnt_f = new Vector3(0, 1f, 0.5f);
-    private static Vector3 pnt_g = new Vector3(0, 0, 1.5f);
+    private static Vector3 pnt_g = new Vector3(0, 0, 3f);
     private static Vector3 pnt_h = new Vector3(-1f, 0, 0.5f);
     private static Vector3 new_CentrePntOnPlane;
 
@@ -76,14 +76,12 @@ public class InstantiationExample : MonoBehaviour
         Sphere5D2 =  Generate5DSphere(pnt_e, pnt_f, pnt_g, pnt_h);
         SphereObj1=GenerateGameObjSphere(Sphere5D1);
         SphereObj2=GenerateGameObjSphere(Sphere5D2);
-        Vector3 old_position1=SphereObj1.transform.position;
-        Vector3 old_position2=SphereObj2.transform.position;
+
+        
+
 
         GameObject PlaneObj1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
         CGA.CGA CircleofIntersection=CircleByTwoSpheres(Sphere5D1, Sphere5D2);
-        Debug.Log(Sphere5D1);
-        Debug.Log(Sphere5D2);
-
         
         CGA.CGA PlaneofIntersection=createIc(CircleofIntersection);
         Vector3 new_n_roof=GetPlaneNormal(PlaneofIntersection);
@@ -94,35 +92,31 @@ public class InstantiationExample : MonoBehaviour
         //Change the GameObject's Material Color to red
         PlaneRenderer.material.color = Color.red;
 
+        
+        old_position1=SphereObj1.transform.position;
+        old_position2=SphereObj2.transform.position;
+        Debug.Log(old_position2);
+
     }
 
     void Update()
     {   //will include dilation later
+        
         Vector3 dist_moved_by_hand1=SphereObj1.transform.position-old_position1;
-        //Vector3 dist_moved_by_hand2=SphereObj2.transform.position-old_position2;
-
+        Vector3 dist_moved_by_hand2=SphereObj2.transform.position-old_position2;
+         Debug.Log(old_position2);
+         Debug.Log(SphereObj2.transform.position);
+        
+        
 
         CGA.CGA dist_tomove1 = vector_to_pnt(dist_moved_by_hand1);
-        //CGA.CGA dist_tomove2 = vector_to_pnt(dist_moved_by_hand2);
+        CGA.CGA dist_tomove2 = vector_to_pnt(dist_moved_by_hand2);
         CGA.CGA RTforSphere1 = GenerateTranslationRotor(dist_tomove1);
-        //CGA.CGA RTforSphere2 = GenerateTranslationRotor(dist_tomove2);
+        CGA.CGA RTforSphere2 = GenerateTranslationRotor(dist_tomove2);
+
         Sphere5D1=RTforSphere1*Sphere5D1*~RTforSphere1;
-        //Sphere5D2=RTforSphere2*Sphere5D2*~RTforSphere2;
+        Sphere5D2=RTforSphere2*Sphere5D2*~RTforSphere2;
 
-        Debug.Log(Sphere5D1);
-        Debug.Log(Sphere5D2); // this Sphere5D2 is somehow different from before even though I did not move anything
-
-        // pnt_a+=dist_moved_by_hand1;
-        // pnt_b+=dist_moved_by_hand1;
-        // pnt_c+=dist_moved_by_hand1;
-        // pnt_d+=dist_moved_by_hand1;
-        // pnt_e+=dist_moved_by_hand2;
-        // pnt_f+=dist_moved_by_hand2;
-        // pnt_g+=dist_moved_by_hand2;
-        // pnt_h+=dist_moved_by_hand2;
-        // Sphere5D1 =  Generate5DSphere(pnt_a, pnt_b, pnt_c, pnt_d);
-        // Sphere5D2 =  Generate5DSphere(pnt_e, pnt_f, pnt_g, pnt_h);
-        
         CGA.CGA CircleofIntersection=CircleByTwoSpheres(Sphere5D1, Sphere5D2);
         CGA.CGA PlaneofIntersection=createIc(CircleofIntersection);
         Vector3 new_n_roof=GetPlaneNormal(PlaneofIntersection);
