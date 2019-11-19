@@ -7,11 +7,7 @@ using static CGA.CGA;
 
 public class tree_grow : MonoBehaviour
 {
-    public CGA.CGA GenerateDilationRotor(float alpha){
-        var eio=ei*eo;
-        float logalpha = (float)Math.Log(alpha);
-        return (float)Math.Cosh(logalpha/2)+ (float)Math.Sinh(logalpha/2)*eio;
-    }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -37,8 +37,6 @@ public class Circle_Renderer : MonoBehaviour {
         line.SetColors(c1, c1);
         line.SetWidth(0.1f, 0.1f);
         line.useWorldSpace = false;
-        Debug.Log(line.transform.position);
-        Debug.Log(line.transform.rotation);
 
         CreatePoints ();
     }

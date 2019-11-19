@@ -733,18 +733,19 @@ namespace CGA
 		{
 			//get all two blades
 			var Sigma5D12 = Sigma5D1 * Sigma5D2;
-			var Sigma5D12_2blades = Sigma5D12[6] * (e1 ^ e2) + Sigma5D12[7] * (e1 ^ e3) + Sigma5D12[8] * (e1 ^ e4) + Sigma5D12[9] * (e1 ^ e5) + Sigma5D12[10] * (e2^ e3) 
-							+ Sigma5D12[11] * (e2 ^ e4) + Sigma5D12[12] *(e2^e5)+ Sigma5D12[13]*(e3^e4) + Sigma5D12[14]*(e3^e5) + Sigma5D12[15]*(e4^e5);
-			return !Sigma5D12_2blades;
+			//var Sigma5D12_2blades = Sigma5D12[6] * (e1 ^ e2) + Sigma5D12[7] * (e1 ^ e3) + Sigma5D12[8] * (e1 ^ e4) + Sigma5D12[9] * (e1 ^ e5) + Sigma5D12[10] * (e2^ e3) 
+			//				+ Sigma5D12[11] * (e2 ^ e4) + Sigma5D12[12] *(e2^e5)+ Sigma5D12[13]*(e3^e4) + Sigma5D12[14]*(e3^e5) + Sigma5D12[15]*(e4^e5);
+			var circle = (!((!Sigma5D1)^(!Sigma5D2))).normalized();
+			return circle; //!Sigma5D12_2blades;
 		}
 
 		// Preparations on defining game objects: plane, circle, sphere
 		public static float GetPlaneDist(CGA Plane5D){
-			return  (float) (0.5f)*((!Plane5D.normalized())|eo)[0];
+			return  (float) ((!Plane5D.normalized())|eo)[0];
 		}
 
 		public static Vector3 GetPlaneNormal(CGA Plane5D){
-			var n_roof=(!Plane5D.normalized())-0.5f*((!Plane5D.normalized())|eo)*ei;
+			var n_roof=(!(Plane5D.normalized()))-((!Plane5D.normalized())|eo)*ei;
 			return pnt_to_vector(n_roof);
 		}
 		public static Vector3 findCentre(CGA Circle5DorSphere5D)
@@ -756,10 +757,10 @@ namespace CGA
 
 		public static CGA createIc(CGA Circle5D)
 		{   // find the plane on which the circle lies
-			CGA element = ei ^ Circle5D;
-			float denom = Mathf.Sqrt((element * element)[0] * (-1f));
-			CGA Ic = element * (1 / denom);
-			return Ic;
+			CGA element = (ei ^ Circle5D).normalized();
+			// float denom = Mathf.Sqrt((element * element)[0] * (-1f));
+			// CGA Ic = element * (1 / denom);
+			return element;
 		}
 		public static float findSphereRadius(CGA Sphere5D)
 		{
@@ -774,7 +775,7 @@ namespace CGA
 			var Ic=createIc(Circle5D);
 			var Circle5D_star2 = normalise_pnt_minus_one(Circle5D*Ic);
 			float CircleRadiusSqr = (Circle5D_star2 * Circle5D_star2)[0];
-			return Mathf.Sqrt(CircleRadiusSqr);
+			return Mathf.Sqrt(Math.Abs(CircleRadiusSqr));
 		}
 
 		
