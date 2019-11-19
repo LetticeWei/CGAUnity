@@ -76,26 +76,9 @@ public class InstantiationExample : MonoBehaviour
         Sphere5D2 =  Generate5DSphere(pnt_e, pnt_f, pnt_g, pnt_h);
         SphereObj1=GenerateGameObjSphere(Sphere5D1);
         SphereObj2=GenerateGameObjSphere(Sphere5D2);
-
-        
-
-
-        GameObject PlaneObj1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        CGA.CGA CircleofIntersection=CircleByTwoSpheres(Sphere5D1, Sphere5D2);
-        
-        CGA.CGA PlaneofIntersection=createIc(CircleofIntersection);
-        Vector3 new_n_roof=GetPlaneNormal(PlaneofIntersection);
-        new_CentrePntOnPlane=findCentre(CircleofIntersection);
-        Destroy(PlaneObj1);
-        PlaneObj1=UpdateGameObjPlane(new_n_roof, new_CentrePntOnPlane);
-        PlaneRenderer = PlaneObj1.GetComponent<Renderer>();
-        //Change the GameObject's Material Color to red
-        PlaneRenderer.material.color = Color.red;
-
         
         old_position1=SphereObj1.transform.position;
         old_position2=SphereObj2.transform.position;
-        Debug.Log(old_position2);
 
     }
 
@@ -104,10 +87,6 @@ public class InstantiationExample : MonoBehaviour
         
         Vector3 dist_moved_by_hand1=SphereObj1.transform.position-old_position1;
         Vector3 dist_moved_by_hand2=SphereObj2.transform.position-old_position2;
-         Debug.Log(old_position2);
-         Debug.Log(SphereObj2.transform.position);
-        
-        
 
         CGA.CGA dist_tomove1 = vector_to_pnt(dist_moved_by_hand1);
         CGA.CGA dist_tomove2 = vector_to_pnt(dist_moved_by_hand2);
@@ -123,6 +102,9 @@ public class InstantiationExample : MonoBehaviour
         new_CentrePntOnPlane=findCentre(CircleofIntersection);
         Destroy(PlaneObj1);
         PlaneObj1=UpdateGameObjPlane(new_n_roof, new_CentrePntOnPlane);
+        //Change the GameObject's Material Color to red
+        PlaneRenderer = PlaneObj1.GetComponent<Renderer>();
+        PlaneRenderer.material.color = Color.red;
 
         old_position1=SphereObj1.transform.position;
         old_position2=SphereObj2.transform.position;
