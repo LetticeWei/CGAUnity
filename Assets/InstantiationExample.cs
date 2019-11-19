@@ -67,6 +67,8 @@ public class InstantiationExample : MonoBehaviour
     private static Vector3 new_CentrePntOnPlane;
 
     Renderer PlaneRenderer;
+    LineRenderer line;
+    private int segments = 10;
 
     void Start()
     {
@@ -82,6 +84,8 @@ public class InstantiationExample : MonoBehaviour
 
     }
 
+    
+    
     void Update()
     {   //will include dilation later
         
@@ -101,11 +105,37 @@ public class InstantiationExample : MonoBehaviour
         Vector3 new_n_roof=GetPlaneNormal(PlaneofIntersection);
         new_CentrePntOnPlane=findCentre(CircleofIntersection);
         Destroy(PlaneObj1);
-        PlaneObj1=UpdateGameObjPlane(new_n_roof, new_CentrePntOnPlane);
-        //Change the GameObject's Material Color to red
-        PlaneRenderer = PlaneObj1.GetComponent<Renderer>();
-        PlaneRenderer.material.color = Color.red;
+        float RadiusofCircleofIntersection=findCircleRadius(CircleofIntersection);
+        if (RadiusofCircleofIntersection>0){
+            PlaneObj1=UpdateGameObjPlane(new_n_roof, new_CentrePntOnPlane);
+            //Change the GameObject's Material Color to red
+            PlaneRenderer = PlaneObj1.GetComponent<Renderer>();
+            //PlaneRenderer.material.color = Color.red;
+            PlaneRenderer.material.color= new Color(1.0f,1.0f,1.0f,0);
 
+            //display the circle of intersection on the plane
+            line = PlaneObj1.AddComponent<LineRenderer>();
+            line = PlaneObj1.GetComponent<LineRenderer>();
+            Color c1 = Color.white;
+            line.SetVertexCount (segments + 1);
+            line.SetColors(c1, c1);
+            line.SetWidth(0.3f, 0.3f);
+            line.useWorldSpace = false;
+            float x;
+            float z;
+            float angle = 2f;
+            for (int i = 0; i < (segments + 1); i++)
+            {
+                x = Mathf.Sin (Mathf.Deg2Rad * angle) * RadiusofCircleofIntersection;
+                z = Mathf.Cos (Mathf.Deg2Rad * angle) * RadiusofCircleofIntersection;
+                line.SetPosition (i,new Vector3(x,0,z) );
+                angle += (360f / segments);
+            }
+        }
+
+
+
+        
         old_position1=SphereObj1.transform.position;
         old_position2=SphereObj2.transform.position;
     }
