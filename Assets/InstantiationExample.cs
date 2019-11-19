@@ -7,228 +7,131 @@ using System;
 
 public class InstantiationExample : MonoBehaviour
 {
-    // create a sphere
 
-    public Vector3 findCentre(CGA.CGA sigma)
-    {
-        //can be used for both sphere and circle
-        var CGAVector = sigma * ei * sigma;
-        var CGAVector2 = down(CGAVector);
-        return new Vector3(CGAVector2[1], CGAVector2[2], CGAVector2[3]);
-    }
-
-    public CGA.CGA Generate5DSphere(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
-    {
-        var A = up(a.x, a.y, a.z);
-        var B = up(b.x, b.y, b.z);
-        var C = up(c.x, c.y, c.z);
-        var D = up(d.x, d.y, d.z);
-        var sigma = A ^ B ^ C ^ D;
-        return sigma;
-    }
-
-    public CGA.CGA createIc(CGA.CGA CircleC)
-    {
-        var element = ei ^ CircleC;
-        var denom = Mathf.Sqrt((element * element)[0] * (-1f));
-        var Ic = element * (1 / denom);
-        return Ic;
-    }
-
-    public float findCircleRadius(CGA.CGA C)
-    {
-        var Ic=createIc(C);
-        var C_star=C*Ic;
-        var C_star2 = normalise_pnt_minus_one(C_star);
-        float result = (C_star2 * C_star2)[0];
-        return Mathf.Sqrt(result);
-    }
-
-
-
-    public CGA.CGA Create5DCircle(Vector3 a, Vector3 b, Vector3 c)
-    {
-        var A = up(a.x, a.y, a.z);
-        var B = up(b.x, b.y, b.z);
-        var C = up(c.x, c.y, c.z);
-        var CircleC = A ^ B ^ C;
-        return CircleC;
-    }
-
-    public float findRadius(CGA.CGA sigma)
-    {
-        //can be used for both sphere and circle
-        var sigmanD = normalise_pnt_minus_one(!sigma);
-        float result = (sigmanD * sigmanD)[0];
-        return Mathf.Sqrt(result);
-    }
-
-
-    public CGA.CGA CircleByTwoSpheres(CGA.CGA sigma1, CGA.CGA sigma2)
-    {
-        //get all two blades
-        var sigma12 = sigma1 * sigma2;
-        var sigma12_2blades = sigma12[6] * (e1 ^ e2) + sigma12[7] * (e1 ^ e3) + sigma12[8] * (e1 ^ e4) + sigma12[9] * (e1 ^ e5) + sigma12[10] * (e2^ e3) 
-                        + sigma12[11] * (e2 ^ e4) + sigma12[12] *(e2^e5)+ sigma12[13]*(e3^e4) + sigma12[14]*(e3^e5) + sigma12[15]*(e4^e5);
-        return !sigma12_2blades;
-    }
-
-    public CGA.CGA GenerateRotationRotor(float theta,CGA.CGA ea ,CGA.CGA eb){
-        var eab=ea^eb;
-        return (float)Math.Cos(theta/2)+ (float)Math.Sin(theta/2)*eab;
-    }
-    public CGA.CGA GenerateGameObjSphere(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
-    {
-        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        var sigma = Generate5DSphere(a, b, c, d);
-        var centre = findCentre(sigma);
-        var radius = findRadius(sigma);
-        sphere.transform.position = centre;
-        sphere.transform.localScale = new Vector3(1, 1, 1) * radius * 2;
-        return sigma;
-    }
-
-    public float meleeRadius = 2f;
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.white;
-        float theta = 0;
-        float x = meleeRadius * Mathf.Cos(theta);
-        float y = meleeRadius * Mathf.Sin(theta);
-        Vector3 pos = transform.position + new Vector3(x, 0, y);
-        Vector3 newPos = pos;
-        Vector3 lastPos = pos;
-        for (theta = 0.1f; theta < Mathf.PI * 2; theta += 0.1f)
-        {
-            x = meleeRadius * Mathf.Cos(theta);
-            y = meleeRadius * Mathf.Sin(theta);
-            newPos = transform.position + new Vector3(x, 0, y);
-            Gizmos.DrawLine(pos, newPos);
-            pos = newPos;
-        }
-        Gizmos.DrawLine(pos, lastPos);
-    }
-
-    // This script will simply instantiate the objects when the game starts.
-
-    public int segments = 100;
-
-    Renderer m_ObjectRenderer;
-    LineRenderer line;
-
-    void Start()
-    {
-        // use four points to define a sphere
-        var a = new Vector3(1f, 1f, 0);
-        var b = new Vector3(0, 1f, 5f);
-        var c = new Vector3(-1f, 1f, 0);
-        var d = new Vector3(0, 2f, 0);
-        var e = new Vector3(0, -1f, 0);
-        var f = new Vector3(0, 2f, 0);
-        var g = new Vector3(0, 0, 3f);
-        var h = new Vector3(1f, 0, 0);
-
-        //define a CGA sphere
-        var sigma = GenerateGameObjSphere(a, b, c, d);
-        var sigma2 = GenerateGameObjSphere(e, f, g, h);
-
-        var CircleIntersect = CircleByTwoSpheres(sigma, sigma2);
-        var Ccentre = findCentre(CircleIntersect);
-        var Cradius = findCircleRadius(CircleIntersect);
-
-        var PlaneofIntersecCircle=createIc(CircleIntersect);
-
-        var dist=GetPlaneDist(PlaneofIntersecCircle);
-        var n_roof=GetPlaneNormal(PlaneofIntersecCircle); //n_roof=(A,B,C)
-
-        Debug.Log("PlaneofIntersecCircle");
-        Debug.Log(dist);
-        Debug.Log(n_roof);
-        GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-
-        CGA.CGA currentRoter=QuatToRotor(plane.transform.rotation);
-        var new_Q =FindRotationforPlane(n_roof,currentRoter);
-        plane.transform.rotation=new_Q;
-
-        float scale_of_norm=Mathf.Sqrt(n_roof[0]*n_roof[0]+n_roof[1]*n_roof[1]+n_roof[2]*n_roof[2]);
-        //define the translation vector
-        //CGA.CGA d2 = vector_to_pnt(2*dist*n_roof/scale_of_norm);
-        CGA.CGA d2 = vector_to_pnt(Ccentre);
-        CGA.CGA Rt = GenerateTranslationRotor(d2);
-        //this minus one will be changed later maybe
-        CGA.CGA pos_pnt = up(plane.transform.position.x, 
-                            plane.transform.position.y, 
-                            plane.transform.position.z);
-        var X = Rt*pos_pnt*~Rt;
-        var downx = down(X);
-        plane.transform.position = pnt_to_vector(downx);
-        
-        m_ObjectRenderer = plane.GetComponent<Renderer>();
-        //Change the GameObject's Material Color to red
-        m_ObjectRenderer.material.color = Color.blue;
-
-        //create a cirle by drawing lines
-        line = plane.AddComponent<LineRenderer>();
-        line = plane.GetComponent<LineRenderer>();
-        
-        Color c1 = Color.white;
-        line.SetVertexCount (segments + 1);
-        line.SetColors(c1, c1);
-
-        line.SetWidth(0.3f, 0.3f);
-        line.useWorldSpace = false;
-
-        //draw the circle wrt the plane
-        float x;
-		float y;
-		float z;
-		float angle = 20f;
-		for (int i = 0; i < (segments + 1); i++)
-        {
-            x = Mathf.Sin (Mathf.Deg2Rad * angle) * Cradius;
-            z = Mathf.Cos (Mathf.Deg2Rad * angle) * Cradius;
-            line.SetPosition (i,new Vector3(x,0,z) );
-            angle += (360f / segments);
-        }
-        
-
-
-        meleeRadius = Cradius;
-        //global position for the circle
-        //transform.position=Ccentre;
-        //define a cube
-        // var : GameObject  cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        // cube.transform.position = new Vector3(0, 0.5f, 0);
-        // cube.transform.localScale = new Vector3 (1.25f, 1.5f, 1f);
-
-    
-    }
-
-    public float GetPlaneDist(CGA.CGA Plane5D){
-        return  (float) (0.5f)*((!Plane5D.normalized())|eo)[0];
-    }
-    public Vector3 GetPlaneNormal(CGA.CGA Plane5D){
-        var n_roof=(!Plane5D.normalized())-0.5f*((!Plane5D.normalized())|eo)*ei;
-        return pnt_to_vector(n_roof);
-    }
-
-    public Quaternion FindRotationforPlane(Vector3 n_roof,CGA.CGA currentRoter){
-        //rotation from old plane normal (0,0,1) to n_roof
-        //rotation angle = the angle between (0,0,1) and (A,B,C)
-        
+    public Quaternion UpdateRotParamforPlane(Vector3 n_roof,CGA.CGA currentRoter){
+        //rotation from old plane normal (0,1,0) to n_roof
+        //rotation angle = the angle between (0,1,0) and (A,B,C)
         float scale_of_norm=Mathf.Sqrt(n_roof[0]*n_roof[0]+n_roof[1]*n_roof[1]+n_roof[2]*n_roof[2]);
         float theta= (float) Math.Acos(n_roof[1]/scale_of_norm);
-        //rotation plane= the plane spaned by (0,0,1) and (A,B,C)
+        //rotation plane= the plane spaned by (0,1,0) and (A,B,C)
         var rot_plane=e2^(n_roof[0]*e1+n_roof[1]*e2+n_roof[2]*e3);
-        CGA.CGA R =  GenerateRotationRotor2(theta,rot_plane);
+        CGA.CGA R =  GenerateRotationRotor(theta,rot_plane);
         var newR = R*currentRoter;
         var new_Q=RotorToQuat(newR);
         return new_Q;
     }  
 
-    public CGA.CGA GenerateRotationRotor2(float theta,CGA.CGA eab){
-        return (float)Math.Cos(theta/2)+ (float)Math.Sin(theta/2)*eab;
+    public GameObject GenerateGameObjSphere(CGA. CGA Sphere5D){
+        GameObject SphereObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        Vector3 centre = findCentre(Sphere5D);
+        float radius = findSphereRadius(Sphere5D);
+        SphereObj.transform.position = centre;
+        SphereObj.transform.localScale = new Vector3(1, 1, 1) * radius * 2;
+        return SphereObj;
     }
 
+
+    public GameObject UpdateGameObjPlane(Vector3 new_n_roof, Vector3 new_CentrePntOnPlane){
+        GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        CGA.CGA currentRoter = QuatToRotor(plane.transform.rotation);
+        plane.transform.rotation = UpdateRotParamforPlane(new_n_roof,currentRoter);
+        CGA.CGA dist_tomove = vector_to_pnt(new_CentrePntOnPlane);
+        CGA.CGA RT_plane_centr_diff = GenerateTranslationRotor(dist_tomove);
+        CGA.CGA Plane_pos_pnt = up(plane.transform.position.x,plane.transform.position.y,plane.transform.position.z);
+        var PlanePosition5D = RT_plane_centr_diff*Plane_pos_pnt*~RT_plane_centr_diff;
+        var PlanePosition3DCGA = down(PlanePosition5D);
+        plane.transform.position = pnt_to_vector(PlanePosition3DCGA);
+        return plane;
+    }
+
+
+    private static CGA.CGA Sphere5D1;
+    private static CGA.CGA Sphere5D2;
+    private static GameObject SphereObj1;
+    private static GameObject SphereObj2;
+    private static GameObject PlaneObj1;
+
+    private static Vector3 old_position1;
+    private static Vector3 old_position2;
+
+    // use four points to define a sphere
+    private static Vector3 pnt_a = new Vector3(1f, 0, 0);
+    private static Vector3 pnt_b = new Vector3(0, 1f, 0);
+    private static Vector3 pnt_c = new Vector3(0, 0, 1f);
+    private static Vector3 pnt_d = new Vector3(-1f, 0, 0);
+    // another four points to define another sphere
+    private static Vector3 pnt_e = new Vector3(1f, 0, 0.5f);
+    private static Vector3 pnt_f = new Vector3(0, 1f, 0.5f);
+    private static Vector3 pnt_g = new Vector3(0, 0, 1.5f);
+    private static Vector3 pnt_h = new Vector3(-1f, 0, 0.5f);
+    private static Vector3 new_CentrePntOnPlane;
+
+    Renderer PlaneRenderer;
+
+    void Start()
+    {
+
+        //define a CGA sphere
+        Sphere5D1 =  Generate5DSphere(pnt_a, pnt_b, pnt_c, pnt_d);
+        Sphere5D2 =  Generate5DSphere(pnt_e, pnt_f, pnt_g, pnt_h);
+        SphereObj1=GenerateGameObjSphere(Sphere5D1);
+        SphereObj2=GenerateGameObjSphere(Sphere5D2);
+        Vector3 old_position1=SphereObj1.transform.position;
+        Vector3 old_position2=SphereObj2.transform.position;
+
+        GameObject PlaneObj1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        CGA.CGA CircleofIntersection=CircleByTwoSpheres(Sphere5D1, Sphere5D2);
+        Debug.Log(Sphere5D1);
+        Debug.Log(Sphere5D2);
+
+        
+        CGA.CGA PlaneofIntersection=createIc(CircleofIntersection);
+        Vector3 new_n_roof=GetPlaneNormal(PlaneofIntersection);
+        new_CentrePntOnPlane=findCentre(CircleofIntersection);
+        Destroy(PlaneObj1);
+        PlaneObj1=UpdateGameObjPlane(new_n_roof, new_CentrePntOnPlane);
+        PlaneRenderer = PlaneObj1.GetComponent<Renderer>();
+        //Change the GameObject's Material Color to red
+        PlaneRenderer.material.color = Color.red;
+
+    }
+
+    void Update()
+    {   //will include dilation later
+        Vector3 dist_moved_by_hand1=SphereObj1.transform.position-old_position1;
+        //Vector3 dist_moved_by_hand2=SphereObj2.transform.position-old_position2;
+
+
+        CGA.CGA dist_tomove1 = vector_to_pnt(dist_moved_by_hand1);
+        //CGA.CGA dist_tomove2 = vector_to_pnt(dist_moved_by_hand2);
+        CGA.CGA RTforSphere1 = GenerateTranslationRotor(dist_tomove1);
+        //CGA.CGA RTforSphere2 = GenerateTranslationRotor(dist_tomove2);
+        Sphere5D1=RTforSphere1*Sphere5D1*~RTforSphere1;
+        //Sphere5D2=RTforSphere2*Sphere5D2*~RTforSphere2;
+
+        Debug.Log(Sphere5D1);
+        Debug.Log(Sphere5D2); // this Sphere5D2 is somehow different from before even though I did not move anything
+
+        // pnt_a+=dist_moved_by_hand1;
+        // pnt_b+=dist_moved_by_hand1;
+        // pnt_c+=dist_moved_by_hand1;
+        // pnt_d+=dist_moved_by_hand1;
+        // pnt_e+=dist_moved_by_hand2;
+        // pnt_f+=dist_moved_by_hand2;
+        // pnt_g+=dist_moved_by_hand2;
+        // pnt_h+=dist_moved_by_hand2;
+        // Sphere5D1 =  Generate5DSphere(pnt_a, pnt_b, pnt_c, pnt_d);
+        // Sphere5D2 =  Generate5DSphere(pnt_e, pnt_f, pnt_g, pnt_h);
+        
+        CGA.CGA CircleofIntersection=CircleByTwoSpheres(Sphere5D1, Sphere5D2);
+        CGA.CGA PlaneofIntersection=createIc(CircleofIntersection);
+        Vector3 new_n_roof=GetPlaneNormal(PlaneofIntersection);
+        new_CentrePntOnPlane=findCentre(CircleofIntersection);
+        Destroy(PlaneObj1);
+        PlaneObj1=UpdateGameObjPlane(new_n_roof, new_CentrePntOnPlane);
+
+        old_position1=SphereObj1.transform.position;
+        old_position2=SphereObj2.transform.position;
+    }
 }
 

@@ -71,13 +71,6 @@ public class CreatePlane : MonoBehaviour
         var dist=GetPlaneDist(Plane5D);
         var n_roof=GetPlaneNormal(Plane5D); //n_roof=(A,B,C)
 
-        // codes for debugging
-        Debug.Log((!Plane5D));
-        Debug.Log((!Plane5D.normalized())*(!Plane5D.normalized()));
-        Debug.Log(2*dist);        
-        Debug.Log(n_roof);
-
-        
         CGA.CGA currentRoter=QuatToRotor(plane.transform.rotation);
         var new_Q =FindRotationforPlane(n_roof,currentRoter);
         plane.transform.rotation=new_Q;
@@ -108,8 +101,7 @@ public class CreatePlane : MonoBehaviour
 
         line.SetWidth(0.3f, 0.3f);
         line.useWorldSpace = false;
-        Debug.Log(line.transform.position);
-        Debug.Log(line.transform.rotation);
+
         
 
         float x;

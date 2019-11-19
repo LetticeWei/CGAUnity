@@ -21,22 +21,11 @@ public class Circle_Renderer : MonoBehaviour {
         {
             x = Mathf.Sin (Mathf.Deg2Rad * angle) * xradius;
             z = Mathf.Cos (Mathf.Deg2Rad * angle) * yradius;
-
             line.SetPosition (i,new Vector3(x,0,z) );
-            
             angle += (360f / segments);
         }
     }
-    public CGA.CGA GenerateRotationRotor(float theta,CGA.CGA ea ,CGA.CGA eb){
-        var eab=ea^eb;
-        return (float)Math.Cos(theta/2)+ (float)Math.Sin(theta/2)*eab;
-    }
-    public Quaternion RotorToQuat(CGA.CGA R){
-        return new Quaternion(R[10], R[7], R[6], R[0]);
-    }
-    public CGA.CGA QuatToRotor(Quaternion q){
-        return q.w + q.x*(e2^e3) + q.y*(e1^e3) + q.z*(e1^e2);
-    }
+
 
     void Start ()
     {
@@ -56,7 +45,7 @@ public class Circle_Renderer : MonoBehaviour {
     void Update()
     {
         float theta = 0.2f;
-        CGA.CGA R =  GenerateRotationRotor(theta,e3,e2);
+        CGA.CGA R =  GenerateRotationRotor(theta,e3^e2);
         CGA.CGA currentRoter=QuatToRotor(line.transform.rotation);
         var newR = R*currentRoter;
         var new_Q=RotorToQuat(newR);

@@ -657,13 +657,14 @@ namespace CGA
 		public static CGA eo = (e4-e5)*0.5f;
 		
 		// up and down functions
+		public static CGA normalise_pnt_minus_one(CGA pnt){
+        return (pnt*(-1.0f/(pnt|ei)[0]));
+    	}
+		
 		public static CGA up (float x, float y, float z) { 
 		  float d = x*x + y*y + z*z;
 		  return x*e1 + y*e2 + z*e3 + 0.5f*d*ei - eo;
 		}
-		public static CGA normalise_pnt_minus_one(CGA pnt){
-        return (pnt*(-1.0f/(pnt|ei)[0]));
-    	}
 
 		public static CGA down(CGA pnt){
         CGA normed_p = normalise_pnt_minus_one(pnt);
@@ -674,33 +675,108 @@ namespace CGA
 		public static Vector3 pnt_to_vector(CGA pnt){
         return new Vector3(pnt[1], pnt[2], pnt[3]);
     	}
-
-		public static float pnt_to_scalar_pnt(CGA pnt){
-		double d = pnt[0];
-        return (float) d;
-    	}
-		public static CGA QuatToRotor(Quaternion q){
-        return q.w + q.x*(e2^e3) + q.y*(e1^e3) + q.z*(e1^e2);
-    	}
-
-		public static CGA GenerateTranslationRotor(CGA mv){
-        return 1 + 0.5f*ei*mv;
-    	}
-
-		public static Quaternion RotorToQuat(CGA R){
-        return new Quaternion(R[10], R[7], R[6], R[0]);
-    	}
-
 		public static CGA vector_to_pnt(Vector3 vec){
         return vec.x*e1 + vec.y*e2 + vec.z*e3;
+    	}
+
+		public static float pnt_to_scalar_pnt(CGA pnt){ //will possibly be deleted later
+		double d = pnt[0];
+        return (float) d;
     	}
 
 		public static Quaternion vector_to_euler(Vector3 vec){
         //Return the new Quaternion
         return new Quaternion(vec.x, vec.y , vec.z, 1);
     	}
+		
+		public static CGA QuatToRotor(Quaternion q){
+        return q.w + q.x*(e2^e3) + q.y*(e1^e3) + q.z*(e1^e2);
+    	}
+		public static Quaternion RotorToQuat(CGA R){
+        return new Quaternion(R[10], R[7], R[6], R[0]);
+    	}
 
-		// Define the Rotors here?
+		//Generating all types of rotors
+		public static CGA GenerateTranslationRotor(CGA mv){
+        return 1 + 0.5f*ei*mv;
+    	}
+
+		public static CGA GenerateRotationRotor(float theta, CGA e_plane){
+        return (float)Math.Cos(theta/2)+ (float)Math.Sin(theta/2)*e_plane;
+    	}
+		public static CGA GenerateDilationRotor(float alpha){
+			var eio=ei*eo;
+			float logalpha = (float)Math.Log(alpha);
+			return (float)Math.Cosh(logalpha/2)+ (float)Math.Sinh(logalpha/2)*eio;
+		}
+
+		// Generate shapes : sphere, circle, plane
+		public static CGA Generate5DSphere(Vector3 a, Vector3 b, Vector3 c, Vector3 d){
+			var A = up(a.x, a.y, a.z);
+			var B = up(b.x, b.y, b.z);
+			var C = up(c.x, c.y, c.z);
+			var D = up(d.x, d.y, d.z);
+			var Sigma5D = A ^ B ^ C ^ D;
+			return Sigma5D;
+		}
+
+		public static CGA Create5DCircle(Vector3 a, Vector3 b, Vector3 c){
+			var A = up(a.x, a.y, a.z);
+			var B = up(b.x, b.y, b.z);
+			var C = up(c.x, c.y, c.z);
+			var Circle5D = A ^ B ^ C;
+			return Circle5D;
+		}
+
+		// Find intersections between: two spheres
+		public static CGA CircleByTwoSpheres(CGA Sigma5D1, CGA Sigma5D2)
+		{
+			//get all two blades
+			var Sigma5D12 = Sigma5D1 * Sigma5D2;
+			var Sigma5D12_2blades = Sigma5D12[6] * (e1 ^ e2) + Sigma5D12[7] * (e1 ^ e3) + Sigma5D12[8] * (e1 ^ e4) + Sigma5D12[9] * (e1 ^ e5) + Sigma5D12[10] * (e2^ e3) 
+							+ Sigma5D12[11] * (e2 ^ e4) + Sigma5D12[12] *(e2^e5)+ Sigma5D12[13]*(e3^e4) + Sigma5D12[14]*(e3^e5) + Sigma5D12[15]*(e4^e5);
+			return !Sigma5D12_2blades;
+		}
+
+		// Preparations on defining game objects: plane, circle, sphere
+		public static float GetPlaneDist(CGA Plane5D){
+			return  (float) (0.5f)*((!Plane5D.normalized())|eo)[0];
+		}
+
+		public static Vector3 GetPlaneNormal(CGA Plane5D){
+			var n_roof=(!Plane5D.normalized())-0.5f*((!Plane5D.normalized())|eo)*ei;
+			return pnt_to_vector(n_roof);
+		}
+		public static Vector3 findCentre(CGA Circle5DorSphere5D)
+		{
+			CGA CGAVector = Circle5DorSphere5D * ei * Circle5DorSphere5D;
+			CGA CGAVector2 = down(CGAVector);
+			return new Vector3(CGAVector2[1], CGAVector2[2], CGAVector2[3]);
+		}
+
+		public static CGA createIc(CGA Circle5D)
+		{   // find the plane on which the circle lies
+			CGA element = ei ^ Circle5D;
+			float denom = Mathf.Sqrt((element * element)[0] * (-1f));
+			CGA Ic = element * (1 / denom);
+			return Ic;
+		}
+		public static float findSphereRadius(CGA Sphere5D)
+		{
+			//find the radius of the 5D sphere or 5D circle
+			CGA Sphere5D_nD = normalise_pnt_minus_one(!Sphere5D);
+			float SphereRadiusSqr= (Sphere5D_nD * Sphere5D_nD)[0];
+			return Mathf.Sqrt(SphereRadiusSqr);
+		}
+
+		public static float findCircleRadius(CGA Circle5D)
+		{
+			var Ic=createIc(Circle5D);
+			var Circle5D_star2 = normalise_pnt_minus_one(Circle5D*Ic);
+			float CircleRadiusSqr = (Circle5D_star2 * Circle5D_star2)[0];
+			return Mathf.Sqrt(CircleRadiusSqr);
+		}
+
 		
 		/// string cast
 		public override string ToString()

@@ -6,14 +6,7 @@ using System;
 using static CGA.CGA;
 public class cube_rot : MonoBehaviour
 {
-    public CGA.CGA GenerateRotationRotor(float theta){
-        var e12=e1^e2;
-        return (float)Math.Cos(theta/2)+ (float)Math.Sin(theta/2)*e12;
-    }
-    // public CGA.CGA GenerateInvertor(){
-    //     return e4;
-    // }
-    // Start is called before the first frame update
+
     void Start()
     {
         
