@@ -656,6 +656,9 @@ namespace CGA
 		public static CGA ei = e4+e5;
 		public static CGA eo = (e4-e5)*0.5f;
 		
+		public static CGA I5 = e1^e2^e3^e4^e5;
+		public static CGA I3 = e1^e2^e3;
+
 		// up and down functions
 		public static CGA normalise_pnt_minus_one(CGA pnt){
         return (pnt*(-1.0f/(pnt|ei)[0]));
@@ -728,15 +731,66 @@ namespace CGA
 			return Circle5D;
 		}
 
+		public static CGA Create5DPlane(Vector3 a, Vector3 b, Vector3 c)
+		{
+			var A = up(a.x, a.y, a.z);
+			var B = up(b.x, b.y, b.z);
+			var C = up(c.x, c.y, c.z);
+			var Plane5D = A ^ B ^ C ^ ei;
+			return Plane5D;
+		}
+
 		// Find intersections between: two spheres
 		public static CGA CircleByTwoSpheres(CGA Sigma5D1, CGA Sigma5D2)
 		{
 			//get all two blades
-			var Sigma5D12 = Sigma5D1 * Sigma5D2;
+			//var Sigma5D12 = Sigma5D1 * Sigma5D2;
 			//var Sigma5D12_2blades = Sigma5D12[6] * (e1 ^ e2) + Sigma5D12[7] * (e1 ^ e3) + Sigma5D12[8] * (e1 ^ e4) + Sigma5D12[9] * (e1 ^ e5) + Sigma5D12[10] * (e2^ e3) 
 			//				+ Sigma5D12[11] * (e2 ^ e4) + Sigma5D12[12] *(e2^e5)+ Sigma5D12[13]*(e3^e4) + Sigma5D12[14]*(e3^e5) + Sigma5D12[15]*(e4^e5);
-			var circle = (!((!Sigma5D1)^(!Sigma5D2))).normalized();
-			return circle; //!Sigma5D12_2blades;
+			var Interseccircle = (!((!Sigma5D1)^(!Sigma5D2))).normalized();
+			return Interseccircle; //!Sigma5D12_2blades;
+		}
+
+		// Find intersections between two planes
+		public static CGA LineByTwoPlanes(CGA Plane5D1, CGA Plane5D2)
+		{
+			//get all two blades
+			var Intersecline = (!((!Plane5D1)^(!Plane5D2))).normalized();
+			return Intersecline; //!Sigma5D12_2blades;
+		}
+		public static Vector3 ExtractDirectLine(CGA Line5D){
+			var direc=-1f*(!Line5D)*I3;
+			return pnt_to_vector(direc);
+		}
+
+		public static Vector3 ExtractPointOnLine(CGA Line5D){
+			var pntpr = Line5D|eo;
+			var pnt = down(pntpr*ei*pntpr);
+			return pnt_to_vector(pnt);
+		}
+
+		public static CGA ExtractPntADefiningLines(CGA Line5D)
+		{	
+			CGA one =new CGA(1f, 0);
+			var beta=(float) Mathf.Sqrt((Line5D*Line5D)[0]);
+			
+			var F=1.0f/beta*Line5D;
+			Debug.Log(F*F);
+			var P=0.5f*(one +F);
+			var P_d=0.5f*(one -F);
+			Debug.Log(P*P_d);
+			var PntA=-1f*P_d*(Line5D|ei)*P;
+			return PntA.normalized();
+		}
+
+		public static CGA ExtractPntBDefiningLines(CGA Line5D)
+		{	CGA one =new CGA(1f, 0);
+			var beta=(float) Mathf.Sqrt((Line5D*Line5D)[0]);
+			var F=1.0f/beta*Line5D;
+			var P=0.5f*(one+F);
+			var P_d=0.5f*(one-F);
+			var PntB=P*(Line5D|ei)*P_d;
+			return PntB.normalized();
 		}
 
 		// Preparations on defining game objects: plane, circle, sphere

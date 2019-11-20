@@ -34,11 +34,7 @@ public class InstantiationExample : MonoBehaviour
     Renderer PlaneRenderer1;
     Renderer PlaneRenderer2;
     LineRenderer line;
-    private int segments = 10;
-
-
-
-
+    private int segments = 100;
 
 
     public Quaternion SetRotParamforPlane(Vector3 n_roof){
