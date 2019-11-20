@@ -373,6 +373,7 @@ GameObject:
   - component: {fileID: 794044732}
   - component: {fileID: 794044731}
   - component: {fileID: 794044735}
+  - component: {fileID: 794044736}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -468,6 +469,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotation_speed: 0.1
   translation_speed: 0.1
+--- !u!114 &794044736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794044730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee8870451a5afdf4e8149a892a696f47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,7 +558,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: -3.9, y: 20.2, z: -24.1}
+  m_LocalPosition: {x: -5.74, y: 18.3, z: -18.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
