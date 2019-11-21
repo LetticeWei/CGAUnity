@@ -102,16 +102,24 @@ public class InstantiationExample : MonoBehaviour
     void Update()
     {   //will include dilation later
         
-        Vector3 dist_moved_by_hand1=SphereObj1.transform.position-old_position1;
-        Vector3 dist_moved_by_hand2=SphereObj2.transform.position-old_position2;
+        // Vector3 dist_moved_by_hand1=SphereObj1.transform.position-old_position1;
+        // Vector3 dist_moved_by_hand2=SphereObj2.transform.position-old_position2;
 
-        CGA.CGA dist_tomove1 = vector_to_pnt(dist_moved_by_hand1);
-        CGA.CGA dist_tomove2 = vector_to_pnt(dist_moved_by_hand2);
-        CGA.CGA RTforSphere1 = GenerateTranslationRotor(dist_tomove1);
-        CGA.CGA RTforSphere2 = GenerateTranslationRotor(dist_tomove2);
+        // CGA.CGA dist_tomove1 = vector_to_pnt(dist_moved_by_hand1);
+        // CGA.CGA dist_tomove2 = vector_to_pnt(dist_moved_by_hand2);
+        // CGA.CGA RTforSphere1 = GenerateTranslationRotor(dist_tomove1);
+        // CGA.CGA RTforSphere2 = GenerateTranslationRotor(dist_tomove2);
 
-        Sphere5D1=RTforSphere1*Sphere5D1*~RTforSphere1;
-        Sphere5D2=RTforSphere2*Sphere5D2*~RTforSphere2;
+        // Sphere5D1=RTforSphere1*Sphere5D1*~RTforSphere1;
+        // Sphere5D2=RTforSphere2*Sphere5D2*~RTforSphere2;
+
+
+        Vector3 SphereCentre1=SphereObj1.transform.position;
+        Vector3 SphereCentre2=SphereObj2.transform.position;
+        float SphereRadius1=SphereObj1.transform.localScale.x/2;
+        float SphereRadius2=SphereObj2.transform.localScale.x/2;
+        Sphere5D1=Generate5DSpherebyCandRou(SphereCentre1,SphereRadius1);
+        Sphere5D2=Generate5DSpherebyCandRou(SphereCentre2,SphereRadius2);
 
         CGA.CGA CircleofIntersection=CircleByTwoSpheres(Sphere5D1, Sphere5D2);
         CGA.CGA PlaneofIntersection=createIc(CircleofIntersection);

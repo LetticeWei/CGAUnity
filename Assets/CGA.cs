@@ -1,4 +1,4 @@
-﻿// 3D Projective Geometric Algebra
+// 3D Projective Geometric Algebra
 // Written by a generator written by enki.
 using System;
 using System.Text;
@@ -723,6 +723,11 @@ namespace CGA
 			return Sigma5D;
 		}
 
+		public static CGA Generate5DSpherebyCandRou(Vector3 Centre, float Radius){
+			CGA Centre5D=up(Centre.x, Centre.y, Centre.z);
+			return !(Centre5D+(-0.5f)*Radius*Radius*ei);
+		}
+
 		public static CGA Create5DCircle(Vector3 a, Vector3 b, Vector3 c){
 			var A = up(a.x, a.y, a.z);
 			var B = up(b.x, b.y, b.z);
@@ -758,11 +763,12 @@ namespace CGA
 			var Intersecline = (!((!Plane5D1)^(!Plane5D2))).normalized();
 			return Intersecline; //!Sigma5D12_2blades;
 		}
+		// find the direction of the 5D line
 		public static Vector3 ExtractDirectLine(CGA Line5D){
 			var direc=-1f*(!Line5D)*I3;
 			return pnt_to_vector(direc);
 		}
-
+		// find the one point on the 5D line
 		public static Vector3 ExtractPointOnLine(CGA Line5D){
 			var pntpr = Line5D|eo;
 			var pnt = down(pntpr*ei*pntpr);
