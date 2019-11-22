@@ -748,12 +748,13 @@ namespace CGA
 		// Find intersections between: two spheres
 		public static CGA CircleByTwoSpheres(CGA Sigma5D1, CGA Sigma5D2)
 		{
-			//get all two blades
-			//var Sigma5D12 = Sigma5D1 * Sigma5D2;
-			//var Sigma5D12_2blades = Sigma5D12[6] * (e1 ^ e2) + Sigma5D12[7] * (e1 ^ e3) + Sigma5D12[8] * (e1 ^ e4) + Sigma5D12[9] * (e1 ^ e5) + Sigma5D12[10] * (e2^ e3) 
-			//				+ Sigma5D12[11] * (e2 ^ e4) + Sigma5D12[12] *(e2^e5)+ Sigma5D12[13]*(e3^e4) + Sigma5D12[14]*(e3^e5) + Sigma5D12[15]*(e4^e5);
 			var Interseccircle = (!((!Sigma5D1)^(!Sigma5D2))).normalized();
-			return Interseccircle; //!Sigma5D12_2blades;
+			return Interseccircle; 
+		}
+		public static CGA CircleBySphereAndPlane(CGA Sigma5D1, CGA Plane5D2)
+		{
+			var Interseccircle = (!((!Sigma5D1)^(!Plane5D2))).normalized();
+			return Interseccircle; 
 		}
 
 		// Find intersections between two planes
@@ -761,7 +762,7 @@ namespace CGA
 		{
 			//get all two blades
 			var Intersecline = (!((!Plane5D1)^(!Plane5D2))).normalized();
-			return Intersecline; //!Sigma5D12_2blades;
+			return Intersecline; 
 		}
 		// find the direction of the 5D line
 		public static Vector3 ExtractDirectLine(CGA Line5D){

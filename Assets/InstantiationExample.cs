@@ -16,9 +16,6 @@ public class InstantiationExample : MonoBehaviour
     private static GameObject PlaneObj1;
     private static GameObject PlaneObj2;
 
-    private static Vector3 old_position1;
-    private static Vector3 old_position2;
-
     // use four points to define a sphere
     private static Vector3 pnt_a = new Vector3(1f, 0, 0);
     private static Vector3 pnt_b = new Vector3(0, 1f, 0);
@@ -29,7 +26,6 @@ public class InstantiationExample : MonoBehaviour
     private static Vector3 pnt_f = new Vector3(0, 1f, 0.5f);
     private static Vector3 pnt_g = new Vector3(0, 0, 3f);
     private static Vector3 pnt_h = new Vector3(-1f, 0, 0.5f);
-    private static Vector3 new_CentrePntOnPlane;
 
     Renderer PlaneRenderer1;
     Renderer PlaneRenderer2;
@@ -93,26 +89,11 @@ public class InstantiationExample : MonoBehaviour
         line.SetWidth(0.3f, 0.3f);
         line.useWorldSpace = false;
 
-        
-        old_position1=SphereObj1.transform.position;
-        old_position2=SphereObj2.transform.position;
 
     }
     
     void Update()
     {   //will include dilation later
-        
-        // Vector3 dist_moved_by_hand1=SphereObj1.transform.position-old_position1;
-        // Vector3 dist_moved_by_hand2=SphereObj2.transform.position-old_position2;
-
-        // CGA.CGA dist_tomove1 = vector_to_pnt(dist_moved_by_hand1);
-        // CGA.CGA dist_tomove2 = vector_to_pnt(dist_moved_by_hand2);
-        // CGA.CGA RTforSphere1 = GenerateTranslationRotor(dist_tomove1);
-        // CGA.CGA RTforSphere2 = GenerateTranslationRotor(dist_tomove2);
-
-        // Sphere5D1=RTforSphere1*Sphere5D1*~RTforSphere1;
-        // Sphere5D2=RTforSphere2*Sphere5D2*~RTforSphere2;
-
 
         Vector3 SphereCentre1=SphereObj1.transform.position;
         Vector3 SphereCentre2=SphereObj2.transform.position;
@@ -124,7 +105,7 @@ public class InstantiationExample : MonoBehaviour
         CGA.CGA CircleofIntersection=CircleByTwoSpheres(Sphere5D1, Sphere5D2);
         CGA.CGA PlaneofIntersection=createIc(CircleofIntersection);
         Vector3 new_n_roof=GetPlaneNormal(PlaneofIntersection);
-        new_CentrePntOnPlane=findCentre(CircleofIntersection);
+        Vector3 new_CentrePntOnPlane=findCentre(CircleofIntersection);
         // Destroy(PlaneObj1);
         float RadiusofCircleofIntersection= findCircleRadius(CircleofIntersection);
         // if (RadiusofCircleofIntersection>0){
@@ -143,13 +124,7 @@ public class InstantiationExample : MonoBehaviour
                 line.SetPosition (i,new Vector3(x,0,z) );
                 angle += (360f / segments);
             }
-        // }
 
-
-
-        
-        old_position1=SphereObj1.transform.position;
-        old_position2=SphereObj2.transform.position;
     }
 }
 
