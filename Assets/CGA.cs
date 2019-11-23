@@ -800,6 +800,12 @@ namespace CGA
 			return normalise_pnt_minus_one(PntA);  //may need to play with the normalised stuff...
 		}
 
+		public static CGA ExtractPntfromTwoBlade(CGA B)
+		{	// B is the result of intersection of a plane and a line
+			return (B^eo)|(ei^eo);
+		}
+		
+
 		public static CGA ExtractPntBfromPntPairs(CGA T)
 		{	CGA one =new CGA(1f, 0);
 			var beta=(float) Mathf.Sqrt((T*T)[0]);

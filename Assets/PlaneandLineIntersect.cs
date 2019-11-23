@@ -26,20 +26,78 @@ public class PlaneandLineIntersect : MonoBehaviour
     private int segments = 1;
 
     // Start is called before the first frame update
+    public CGA.CGA GameObjPlaneToPlane5D(GameObject PlaneObj){
+        var norm = vector_to_pnt(PlaneObj.transform.up);
+        var d = (vector_to_pnt(PlaneObj.transform.position)|norm)[0];
+        CGA.CGA Plane5D = !(norm + d*ei);
+        return Plane5D;
+    }
+    public Quaternion SetRotParamforPlane(Vector3 n_roof){
+        //rotation from old plane normal (0,1,0) to n_roof
+        //rotation angle = the angle between (0,1,0) and (A,B,C)
+        float scale_of_norm=Mathf.Sqrt(n_roof[0]*n_roof[0]+n_roof[1]*n_roof[1]+n_roof[2]*n_roof[2]);
+        float theta= (float) Math.Acos(n_roof[1]/scale_of_norm);
+        //rotation plane= the plane spaned by (0,1,0) and (A,B,C)
+        var rot_plane=(e2^(n_roof[0]*e1+n_roof[1]*e2+n_roof[2]*e3)).normalized();
+        CGA.CGA R = GenerateRotationRotor(theta,rot_plane);
+        var new_Q=RotorToQuat(R);
+        return new_Q;
+    }  
+    public void UpdateGameObjPlane(GameObject p, Vector3 new_n_roof, Vector3 new_CentrePntOnPlane){
+        p.transform.rotation = SetRotParamforPlane(new_n_roof);
+        p.transform.position = new_CentrePntOnPlane;
+    }
     void Start()
     {
-        // Plane5D1 = Create5DPlane(pnt_a, pnt_b, pnt_c);
-        // PlaneObj1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        // Vector3 new_n_roof1=GetPlaneNormal(Plane5D1);
-        // UpdateGameObjPlane(PlaneObj1, new_n_roof1, pnt_a);
+        Plane5D1 = Create5DPlane(pnt_a, pnt_b, pnt_c);
+        PlaneObj1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        Vector3 new_n_roof1=GetPlaneNormal(Plane5D1);
+        UpdateGameObjPlane(PlaneObj1, new_n_roof1, pnt_a);
 
-        // Line5D1=Create5DLine(pnt_e,pnt_f);
+        Line5D1=Create5DLine(pnt_e,pnt_f);
+        LineVertix1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        LineVertix2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        LineVertix1.transform.position=pnt_e;
+        LineVertix2.transform.position=pnt_f;
+        LineVertix1.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f) ;
+        LineVertix2.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f) ;
+        LineVertix1Renderer = LineVertix1.GetComponent<Renderer>();
+        LineVertix1Renderer.material.color= new Color(0,1.0f,0,0);
+        LineVertix2Renderer = LineVertix2.GetComponent<Renderer>();
+        LineVertix2Renderer.material.color= new Color(0,1.0f,0,0);
 
+        line = PlaneObj1.AddComponent<LineRenderer>();
+        Color c1 = Color.white;
+        line.SetVertexCount (segments + 1);
+        line.SetColors(c1, c1);
+        line.SetWidth(0.1f, 0.1f);
+        line.useWorldSpace = true;
+
+        IntersectPointObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        IntersectPointObjRenderer = IntersectPointObj.GetComponent<Renderer>();
+        IntersectPointObjRenderer.material.color= new Color(1.0f,0,0,0);
+        IntersectPointObj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f) ;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Plane5D1 = GameObjPlaneToPlane5D(PlaneObj1);
+        Line5D1=Create5DLine(LineVertix1.transform.position ,LineVertix2.transform.position );
+        line.SetPosition (0,LineVertix1.transform.position);
+        line.SetPosition (1,LineVertix2.transform.position);
+
+        CGA.CGA IntersectPoint5D = Intersection5D(Plane5D1, Line5D1);
+
+        if (pnt_to_scalar_pnt(IntersectPoint5D*IntersectPoint5D)>0){
+            IntersectPointObj.active = true;
+            var IntersectionPnt3D=pnt_to_vector(ExtractPntfromTwoBlade(IntersectPoint5D));
+            IntersectPointObj.transform.position = IntersectionPnt3D;
+            
+            }
+        else{
+            IntersectPointObj.active = false;
+        }
         
     }
 }

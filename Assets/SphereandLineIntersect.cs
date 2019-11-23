@@ -17,7 +17,7 @@ public class SphereandLineIntersect : MonoBehaviour
     private static Vector3 pnt_f = new Vector3(0, -6f, 0);
 
     LineRenderer line;
-    private int segments = 1;
+    private static int segments = 1;
 
     private static CGA.CGA Sphere5D1;
     private static CGA.CGA Line5D1;
@@ -42,6 +42,8 @@ public class SphereandLineIntersect : MonoBehaviour
         SphereObj.transform.localScale = new Vector3(1, 1, 1) * radius * 2;
         return SphereObj;
     }
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,8 +56,6 @@ public class SphereandLineIntersect : MonoBehaviour
         LineVertix2.transform.position=pnt_f;
         LineVertix1.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f) ;
         LineVertix2.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f) ;
-
-
         LineVertix1Renderer = LineVertix1.GetComponent<Renderer>();
         LineVertix1Renderer.material.color= new Color(0,1.0f,0,0);
         LineVertix2Renderer = LineVertix2.GetComponent<Renderer>();
@@ -67,9 +67,7 @@ public class SphereandLineIntersect : MonoBehaviour
         line.SetColors(c1, c1);
         line.SetWidth(0.1f, 0.1f);
         line.useWorldSpace = true;
-
         
-        // var PointonLine=ExtractPointOnLine(Line5D1);
 
         PointAObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         PointAObjRenderer = PointAObj.GetComponent<Renderer>();
