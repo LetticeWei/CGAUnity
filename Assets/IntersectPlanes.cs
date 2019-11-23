@@ -13,9 +13,6 @@ public class IntersectPlanes : MonoBehaviour
     private static GameObject PlaneObj1;
     private static GameObject PlaneObj2;
 
-    private static Vector3 old_position1;
-    private static Vector3 old_position2;
-
     // use four points to define a sphere
     private static Vector3 pnt_a = new Vector3(1f, 0, 0);
     private static Vector3 pnt_b = new Vector3(0, 1f, 0);
@@ -86,7 +83,7 @@ public class IntersectPlanes : MonoBehaviour
         var Direction=ExtractDirectLine(IntersectLine5D);
         var PointonLine=ExtractPointOnLine(IntersectLine5D);
         
-         line.SetPosition (0,PointonLine-200*Direction );
+        line.SetPosition (0,PointonLine-200*Direction );
         line.SetPosition (1,PointonLine+200*Direction );
     }
 }

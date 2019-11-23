@@ -744,6 +744,13 @@ namespace CGA
 			var Plane5D = A ^ B ^ C ^ ei;
 			return Plane5D;
 		}
+		public static CGA Create5DLine(Vector3 a, Vector3 b)
+		{
+			var A = up(a.x, a.y, a.z);
+			var B = up(b.x, b.y, b.z);
+			var Line5D = A ^ B ^ ei;
+			return Line5D;
+		}
 
 		// Find intersections between: two spheres
 		public static CGA CircleByTwoSpheres(CGA Sigma5D1, CGA Sigma5D2)
@@ -756,6 +763,12 @@ namespace CGA
 			var Interseccircle = (!((!Sigma5D1)^(!Plane5D2))).normalized();
 			return Interseccircle; 
 		}
+		public static CGA Intersection5D(CGA Sigma5D1, CGA Sigma5D2)
+		{
+			var Intersection = (!((!Sigma5D1)^(!Sigma5D2))).normalized();
+			return Intersection; 
+		}
+
 
 		// Find intersections between two planes
 		public static CGA LineByTwoPlanes(CGA Plane5D1, CGA Plane5D2)
@@ -776,28 +789,25 @@ namespace CGA
 			return pnt_to_vector(pnt);
 		}
 
-		public static CGA ExtractPntADefiningLines(CGA Line5D)
+		public static CGA ExtractPntAfromPntPairs(CGA T)
 		{	
 			CGA one =new CGA(1f, 0);
-			var beta=(float) Mathf.Sqrt((Line5D*Line5D)[0]);
-			
-			var F=1.0f/beta*Line5D;
-			Debug.Log(F*F);
+			var beta=(float) Mathf.Sqrt((T*T)[0]);
+			var F=1.0f/beta*T;
 			var P=0.5f*(one +F);
 			var P_d=0.5f*(one -F);
-			Debug.Log(P*P_d);
-			var PntA=-1f*P_d*(Line5D|ei)*P;
-			return PntA.normalized();
+			var PntA=-1f*P_d*(T|ei);
+			return normalise_pnt_minus_one(PntA);  //may need to play with the normalised stuff...
 		}
 
-		public static CGA ExtractPntBDefiningLines(CGA Line5D)
+		public static CGA ExtractPntBfromPntPairs(CGA T)
 		{	CGA one =new CGA(1f, 0);
-			var beta=(float) Mathf.Sqrt((Line5D*Line5D)[0]);
-			var F=1.0f/beta*Line5D;
+			var beta=(float) Mathf.Sqrt((T*T)[0]);
+			var F=(1.0f/beta)*T;
 			var P=0.5f*(one+F);
 			var P_d=0.5f*(one-F);
-			var PntB=P*(Line5D|ei)*P_d;
-			return PntB.normalized();
+			var PntB=P*(T|ei);
+			return normalise_pnt_minus_one(PntB);
 		}
 
 		// Preparations on defining game objects: plane, circle, sphere
