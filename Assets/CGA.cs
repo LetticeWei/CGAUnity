@@ -823,7 +823,10 @@ namespace CGA
 			var pnt = down(pntpr*ei*pntpr);
 			return pnt_to_vector(pnt);
 		}
-
+		public static CGA ExtractPntfromTwoBlade(CGA B)
+		{	// B is the result of intersection of a plane and a line
+			return (B^eo)|(ei^eo);
+		}
 		public static CGA ExtractPntAfromPntPairs(CGA T)
 		{	
 			CGA one =new CGA(1f, 0);
@@ -835,10 +838,7 @@ namespace CGA
 			return normalise_pnt_minus_one(PntA);  //may need to play with the normalised stuff...
 		}
 
-		public static CGA ExtractPntfromTwoBlade(CGA B)
-		{	// B is the result of intersection of a plane and a line
-			return (B^eo)|(ei^eo);
-		}
+
 	
 		public static CGA ExtractPntBfromPntPairs(CGA T)
 		{	CGA one =new CGA(1f, 0);

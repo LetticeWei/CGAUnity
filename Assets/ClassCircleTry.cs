@@ -221,11 +221,12 @@ public class Circle{
     }
     public void initialiseCircle(){
         CreateCircle5DusingThreePoints();
+        UpdateCircleCentre();
         FindIcUsingCircle5D();
         UpdateCircleRadius();
-        UpdateCircleCentre();
         CreateCirclePlaneObjOnScene();
-        drawCircleOnPlaneOnScene();}
+        drawCircleOnPlaneOnScene();
+        }
 
 }
 

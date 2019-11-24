@@ -21,8 +21,8 @@ public class PlaneLineIntersectUsingClass : MonoBehaviour
         Plane1=new Plane();
         Plane1.FindPlane5DbyThreePoints(pnt_a,pnt_b,pnt_c);
         Plane1.GetPlaneNormal();
-        //Debug.Log(Plane1.norm);
         Plane1.UpdateGameObjPlane();
+        
         //set up the line
         Line1=new Line();
         Line1.SetUpVertices3Dand5D(pnt_d,pnt_e);

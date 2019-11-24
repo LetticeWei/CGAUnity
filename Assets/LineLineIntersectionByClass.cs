@@ -31,9 +31,6 @@ public class LineLineIntersectionByClass : MonoBehaviour
         LineLineInersectPoint1=new Point();
         LineLineInersectPoint1.SetupPointObject(0, 1f, 0);
 
-        Debug.Log(Line1.Line5D);
-        Debug.Log(Line2.Line5D);
-
         LLInersectPoint1_5D=(!((!Line1.Line5D)^(!Line2.Line5D)));
         
         // var mag=LLInersectPoint1_5D[1]*LLInersectPoint1_5D[1]+LLInersectPoint1_5D[2]*LLInersectPoint1_5D[2]
@@ -44,7 +41,6 @@ public class LineLineIntersectionByClass : MonoBehaviour
 
         // if (mag<valve){
             LineLineInersectPoint1.Point5D=MidPointBetweenLines(Line1.Line5D,Line2.Line5D);
-            Debug.Log(LineLineInersectPoint1.Point5D);
             LineLineInersectPoint1.FindPoint3Dfrom5D();
             LineLineInersectPoint1.UpdatePointObject();
             LineLineInersectPoint1.PointObj.active = true;
