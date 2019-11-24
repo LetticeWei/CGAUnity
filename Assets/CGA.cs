@@ -777,6 +777,41 @@ namespace CGA
 			var Intersecline = (!((!Plane5D1)^(!Plane5D2))).normalized();
 			return Intersecline; 
 		}
+
+		public static CGA PointbyTwoLinesGivenMeet(CGA Line1, CGA Line2){
+			// my approach to get line intersect. probably wrong
+			CGA L1=Line1.normalized();
+			CGA L2=Line2.normalized();
+			CGA L1_p=L2*L1*L2; //L1_p is L1 reflected by L2
+			CGA L1_pp=L1-L1_p; //L1_pp is the line perpendicular to L2;
+			CGA X=up(0f,0f,0f); //X is a RandPoint in 5D, might need to be changed???
+			CGA X_p=L1_pp*X*L1_pp;
+			CGA X_pp=0.5f*(X+X_p);
+			CGA X_ppp=L2*X_pp*L2;
+			CGA P_p=0.5f*(X_pp+X_ppp);
+			float normalising_factor= 1.0f/(2f*((P_p*ei)*(P_p*ei))[0]);
+			CGA P= -1.0f*normalising_factor* (P_p*ei*P_p).normalized();
+			return P;
+		}
+
+		public static CGA GetLineIntersectionIfPerp(CGA L3, CGA Ldd){
+			var Xdd=Ldd*eo*Ldd+eo;
+			var Xddd=L3*Xdd*L3;
+			var Pd= 0.5f*(Xdd+Xddd);
+			var P=-1f*Pd*ei*Pd;
+			var imt=Pd|ei;
+			var P_denom=(2.0f*(imt*imt))[0];
+			return (1.0f/P_denom)*P;
+		}
+
+		public static CGA MidPointBetweenLines(CGA L1, CGA L2){
+			var L3=(L1.normalized()+L2.normalized()).normalized();
+			var Ldd=(L1.normalized()-L2.normalized()).normalized();
+			var S=(I5*GetLineIntersectionIfPerp(L3,Ldd)).normalized();
+			return normalise_pnt_minus_one(S*ei*S); 
+		}
+
+
 		// find the direction of the 5D line
 		public static Vector3 ExtractDirectLine(CGA Line5D){
 			var direc=-1f*(!Line5D)*I3;
@@ -804,8 +839,7 @@ namespace CGA
 		{	// B is the result of intersection of a plane and a line
 			return (B^eo)|(ei^eo);
 		}
-		
-
+	
 		public static CGA ExtractPntBfromPntPairs(CGA T)
 		{	CGA one =new CGA(1f, 0);
 			var beta=(float) Mathf.Sqrt((T*T)[0]);
