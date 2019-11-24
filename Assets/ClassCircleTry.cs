@@ -29,11 +29,30 @@ public class Plane{
     }
     public void SetUpLineRenderOnPlaneObj(bool use_world_space){
         line = PlaneGameObj.AddComponent<LineRenderer>();
+
+        Gradient gradient = new Gradient();
+        float alpha=1.0f;
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.green, 0.0f), new GradientColorKey(Color.red, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+        );
+        line.colorGradient = gradient;
+
         Color c1 = Color.white;
         line.SetVertexCount (segments + 1);
         line.SetColors(c1, c1);
-        line.SetWidth(0.3f, 0.3f);
+
+        AnimationCurve curve = new AnimationCurve();
+        float scale=0.2f;
+        curve.AddKey(0, scale);
+        curve.AddKey(1, scale);
+
+        line.widthCurve=curve;
         line.useWorldSpace = use_world_space;}
+    public void GameObjPlaneToPlane5D(){
+        CGA.CGA norm5D = vector_to_pnt(PlaneGameObj.transform.up);
+        DistToOrigin = (vector_to_pnt(PlaneGameObj.transform.position)|norm5D)[0];
+        Plane5D = !(norm5D + DistToOrigin*ei);}
 }
 public class Circle{
     public Vector3 Centre;public float Radius;
@@ -46,12 +65,17 @@ public class Circle{
         CGA.CGA B = up(PointB.x, PointB.y, PointB.z);
         CGA.CGA C = up(PointC.x, PointC.y, PointC.z);
         Circle5D = A ^ B ^ C;}
-    public void CreateCircle5DusingCentreAndRadius(){ // may not work coz the plane on which it lies is not encoded
-        CGA.CGA Centre5D=up(Centre.x, Centre.y, Centre.z);
-        Circle5D= !(Centre5D+(-0.5f)*Radius*Radius*ei);}
     public void UpdateCircleCentre(){   
         CGA.CGA CGAVector2 = down(Circle5D * ei * Circle5D);
         Centre= new Vector3(CGAVector2[1], CGAVector2[2], CGAVector2[3]);
+    }
+    public void UpdateCircleandCircle5DfromCircleObj(){
+        Centre=PlaneForCircle.PlaneGameObj.transform.position;
+        Radius=PlaneForCircle.PlaneGameObj.transform.localScale.x; // need to make sure same x,y,z values for localScale    
+        PlaneForCircle.GameObjPlaneToPlane5D();
+        Ic=PlaneForCircle.Plane5D;
+        CGA.CGA SpherebyCircle=Generate5DSpherebyCandRou(Centre, Radius);
+        Circle5D=Intersection5D(SpherebyCircle, Ic);
     }
     public void FindIcUsingCircle5D(){
         //find the plane on which the circle lies
@@ -70,6 +94,7 @@ public class Circle{
         PlaneForCircle.centrePoint=Centre;
         PlaneForCircle.UpdateGameObjPlane();
     }
+
     public void drawCircleOnPlaneOnScene(){
         
         //draw the circle on the plane it lies on.
@@ -81,17 +106,24 @@ public class Circle{
         float angle = 2f;
         for (int i = 0; i < (segments + 1); i++)
         {
-            x = Mathf.Sin (Mathf.Deg2Rad * angle) * Radius;
-            z = Mathf.Cos (Mathf.Deg2Rad * angle) * Radius;
+            x = Mathf.Sin (Mathf.Deg2Rad * angle) * Radius*2;
+            z = Mathf.Cos (Mathf.Deg2Rad * angle) * Radius*2;
             PlaneForCircle.line.SetPosition (i,new Vector3(x,0,z) );
             angle += (360f / segments);
         }
     }
+    public void initialiseCircle(){
+        CreateCircle5DusingThreePoints();
+        FindIcUsingCircle5D();
+        UpdateCircleRadius();
+        UpdateCircleCentre();
+        CreateCirclePlaneObjOnScene();
+        drawCircleOnPlaneOnScene();}
 
 }
 
     public class Point{
-        public Vector3 Point3D; public CGA.CGA Point5D; CGA.CGA PointTwoBlades; // PointTwoBlades is the result of intersection of a plane and a line
+        public Vector3 Point3D= new Vector3(0,0,0); public CGA.CGA Point5D; public CGA.CGA PointTwoBlades; // PointTwoBlades is the result of intersection of a plane and a line
         public GameObject PointObj= GameObject.CreatePrimitive(PrimitiveType.Sphere);
         public Renderer PointObjRenderer;
         public void SetUpRenderer(){
@@ -111,8 +143,12 @@ public class Circle{
             PointObj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             PointObjRenderer.material.color= new Color(r,g,b,0); //default colour is red
         }
-        public void UpdatePointObject(){
+
+        public void UpdatePoint3DfromObject(){
             Point3D=PointObj.transform.position;
+        }
+        public void UpdatePointObject(){
+            PointObj.transform.position=Point3D;
         }
     }
 public class Line{
@@ -135,7 +171,24 @@ public class Line{
         lineRenderer.SetVertexCount (segments + 1);
         //Color c1 = Color.white;
         //line.SetColors(c1, c1);
-        lineRenderer.SetWidth(0.1f, 0.1f);
+
+        AnimationCurve curve = new AnimationCurve();
+        float scale=0.2f;
+        curve.AddKey(0, scale);
+        curve.AddKey(1, scale);
+        
+        lineRenderer.widthCurve = curve;
+        
+
+        Gradient gradient = new Gradient();
+        float alpha=1.0f;
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.green, 0.0f), new GradientColorKey(Color.red, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+
+
         lineRenderer.useWorldSpace = true;
     }
     public void UpdateLine5DfromVertexObj(){
@@ -146,42 +199,123 @@ public class Line{
 		FindLine5DfromVertices5D();
     }
     public void UpdateLineObj(){
-        Vertex1.UpdatePointObject();
-        Vertex2.UpdatePointObject();
+        Vertex1.UpdatePoint3DfromObject();
+        Vertex2.UpdatePoint3DfromObject();
         lineRenderer.SetPosition(0,Vertex1.PointObj.transform.position);
         lineRenderer.SetPosition(1,Vertex2.PointObj.transform.position);
     }
 
-}
+    }
 
 public class ClassCircleTry : MonoBehaviour
 {   public static Circle Circle1;
     public static Line Line1;
+    public static Point IntersectPoint1;
+    public static Point IntersectPoint2;
+
+    public static CGA.CGA CircleAndLineIntersect;
     // Start is called before the first frame update
+    public static float valve=0.5f;
     void Start()
     {   
         Line1=new Line();
-        Line1.Vertex1.Point3D=new Vector3(4.0f, 0, 1.0f);
-        Line1.Vertex2.Point3D=new Vector3(-3.0f, 2.0f, 5.0f);
+        Line1.Vertex1.Point3D=new Vector3(4.0f, -2f, 0);
+        Line1.Vertex2.Point3D=new Vector3(-3.0f, 2.0f);
         Line1.SetupVertexObj();
+        Line1.UpdateLine5DfromVertexObj();
         Line1.SetUpLineRenderer();
-        // Circle1=new Circle();
-        // Circle1.PointA=new Vector3(1f, 0, 0);
-        // Circle1.PointB=new Vector3(0, 1f, 0);
-        // Circle1.PointC=new Vector3(0, 0, 3f);
-        // Circle1.CreateCircle5DusingThreePoints();
-        // Circle1.FindIcUsingCircle5D();
-        // Circle1.UpdateCircleRadius();
-        // Circle1.UpdateCircleCentre();
-        // Circle1.CreateCirclePlaneObjOnScene();
-        // Circle1.drawCircleOnPlaneOnScene();
-    }
 
+        Circle1=new Circle();
+        Circle1.PointA=new Vector3(1f, 0, 0);
+        Circle1.PointB=new Vector3(0, 1f, 0);
+        Circle1.PointC=new Vector3(0, 0, 1f);
+        Circle1.initialiseCircle();
+
+        IntersectPoint1=new Point();
+        IntersectPoint1.SetupPointObject(0, 1f, 0);
+        IntersectPoint1.PointObj.active = false;
+        IntersectPoint2=new Point();
+        IntersectPoint1.SetupPointObject(0, 1f, 0);
+        IntersectPoint2.PointObj.active = false;
+        
+        
+
+        CircleAndLineIntersect=(!((!Line1.Line5D)^(!Circle1.Circle5D)));
+
+        
+        if (((CircleAndLineIntersect[1])<=valve)&((CircleAndLineIntersect[2])<=valve)&((CircleAndLineIntersect[3])<=valve)&((CircleAndLineIntersect[4])<=valve)&((CircleAndLineIntersect[5])<=valve)){
+            Debug.Log(2);
+            IntersectPoint1.PointObj.active = true;
+            IntersectPoint2.PointObj.active = true;
+            IntersectPoint1.Point5D=ExtractPntAfromPntPairs(CircleAndLineIntersect);
+            IntersectPoint2.Point5D=ExtractPntBfromPntPairs(CircleAndLineIntersect);
+            IntersectPoint1.FindPoint3Dfrom5D();
+            IntersectPoint2.FindPoint3Dfrom5D();
+            IntersectPoint1.UpdatePointObject();
+            IntersectPoint2.UpdatePointObject();
+        }
+        else if ((pnt_to_scalar_pnt(CircleAndLineIntersect*CircleAndLineIntersect))<=valve){
+            Debug.Log(1);
+            //One intersection
+            IntersectPoint1.PointObj.active = true;
+            IntersectPoint1.PointTwoBlades=CircleAndLineIntersect;
+            IntersectPoint1.Extract5DPointfromTwoBlade();
+            IntersectPoint1.FindPoint3Dfrom5D();
+            IntersectPoint1.UpdatePointObject();
+            }
+        else{
+            
+            //no intersection points
+            IntersectPoint1.PointObj.active = false;
+            IntersectPoint2.PointObj.active = false;
+        }
+
+
+    }
+    
     // Update is called once per frame
     void Update()
     {
         Line1.UpdateLine5DfromVertexObj();
         Line1.UpdateLineObj();
+        Circle1.UpdateCircleandCircle5DfromCircleObj();
+        CircleAndLineIntersect=(!((!Line1.Line5D)^(!Circle1.Circle5D))); // without normalising!
+
+        //Debug.Log(Line1.Line5D);
+        //Debug.Log(Circle1.Circle5D);
+        // Debug.Log(CircleAndLineIntersect);
+        Debug.Log(CircleAndLineIntersect);
+        Debug.Log(CircleAndLineIntersect*CircleAndLineIntersect);
+        
+        if (((CircleAndLineIntersect[1])<=valve)&((CircleAndLineIntersect[2])<=valve)&((CircleAndLineIntersect[3])<=valve)&((CircleAndLineIntersect[4])<=valve)&((CircleAndLineIntersect[5])<=valve)&((CircleAndLineIntersect[1])>0)&((CircleAndLineIntersect[2])>0)&((CircleAndLineIntersect[3])>0)&((CircleAndLineIntersect[4])>0) &((CircleAndLineIntersect[5])>0))
+        {
+            Debug.Log(2);
+            IntersectPoint1.PointObj.active = true;
+            IntersectPoint2.PointObj.active = true;
+            IntersectPoint1.Point5D=ExtractPntAfromPntPairs(CircleAndLineIntersect);
+            IntersectPoint2.Point5D=ExtractPntBfromPntPairs(CircleAndLineIntersect);
+            IntersectPoint1.FindPoint3Dfrom5D();
+            IntersectPoint2.FindPoint3Dfrom5D();
+            IntersectPoint1.UpdatePointObject();
+            IntersectPoint2.UpdatePointObject();
+        }
+        else if ((pnt_to_scalar_pnt(CircleAndLineIntersect*CircleAndLineIntersect)<=valve)
+             & (pnt_to_scalar_pnt(CircleAndLineIntersect*CircleAndLineIntersect)>=0)){
+            Debug.Log(1);
+            //One intersection
+            IntersectPoint1.PointObj.active = true;
+            IntersectPoint1.PointTwoBlades=CircleAndLineIntersect;
+            IntersectPoint1.Extract5DPointfromTwoBlade();
+            IntersectPoint1.FindPoint3Dfrom5D();
+            IntersectPoint1.UpdatePointObject();
+            }
+
+        else{
+            Debug.Log(0);
+            IntersectPoint1.PointObj.active = false;
+            IntersectPoint2.PointObj.active = false;
+        }
 
     }
 }
+

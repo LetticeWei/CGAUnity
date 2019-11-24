@@ -83,7 +83,7 @@ public class PlaneandLineIntersect : MonoBehaviour
     void Update()
     {
         Plane5D1 = GameObjPlaneToPlane5D(PlaneObj1);
-        Line5D1=Create5DLine(LineVertix1.transform.position ,LineVertix2.transform.position );
+        Line5D1=Create5DLine(LineVertix1.transform.position ,LineVertix2.transform.position);
         line.SetPosition (0,LineVertix1.transform.position);
         line.SetPosition (1,LineVertix2.transform.position);
 
