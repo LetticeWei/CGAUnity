@@ -62,78 +62,6 @@ public class Plane{
         DistToOrigin = (vector_to_pnt(PlaneGameObj.transform.position)|norm5D)[0];
         Plane5D = !(norm5D + DistToOrigin*ei);}
 }
-public class Circle{
-    public Vector3 Centre;public float Radius;
-    public Vector3 PointA;public Vector3 PointB;public Vector3 PointC;
-    public CGA.CGA Circle5D;public CGA.CGA Ic; //plane on which the circle lies
-    public Plane PlaneForCircle;public int segments=50;
-    // member function or method
-    public void CreateCircle5DusingThreePoints(){   //or should it be called "Update"?
-        CGA.CGA A = up(PointA.x, PointA.y, PointA.z);
-        CGA.CGA B = up(PointB.x, PointB.y, PointB.z);
-        CGA.CGA C = up(PointC.x, PointC.y, PointC.z);
-        Circle5D = A ^ B ^ C;}
-    public void UpdateCircleCentre(){   
-        CGA.CGA CGAVector2 = down(Circle5D * ei * Circle5D);
-        Centre= new Vector3(CGAVector2[1], CGAVector2[2], CGAVector2[3]);
-    }
-    public void UpdateCircleandCircle5DfromCircleObj(){
-        Centre=PlaneForCircle.PlaneGameObj.transform.position;
-        Radius=PlaneForCircle.PlaneGameObj.transform.localScale.x; // need to make sure same x,y,z values for localScale    
-        PlaneForCircle.GameObjPlaneToPlane5D();
-        Ic=PlaneForCircle.Plane5D;
-        CGA.CGA SpherebyCircle=Generate5DSpherebyCandRou(Centre, Radius);
-        Circle5D=Intersection5D(SpherebyCircle, Ic);
-    }
-    public void FindIcUsingCircle5D(){
-        //find the plane on which the circle lies
-        Ic = (ei ^ Circle5D).normalized();
-        }
-    public void UpdateCircleRadius(){  
-        var Circle5D_star2 = normalise_pnt_minus_one(Circle5D*Ic);
-        float CircleRadiusSqr = (Circle5D_star2 * Circle5D_star2)[0];
-        Radius= Mathf.Sqrt(Math.Abs(CircleRadiusSqr));
-    }
-    public void CreateCirclePlaneObjOnScene(){
-        //create the plane object on which the circle lie
-        PlaneForCircle=new Plane();
-        PlaneForCircle.Plane5D=Ic;
-        PlaneForCircle.GetPlaneNormal();
-        PlaneForCircle.centrePoint=Centre;
-        PlaneForCircle.UpdateGameObjPlane();
-    }
-
-    public void drawCircleOnPlaneOnScene(){
-        
-        //draw the circle on the plane it lies on.
-        PlaneForCircle.segments=segments;
-        PlaneForCircle.SetUpLineRenderOnPlaneObj(false);
-        PlaneForCircle.line = PlaneForCircle.PlaneGameObj.GetComponent<LineRenderer>();
-        float x;
-        float z;
-        float angle = 2f;
-        for (int i = 0; i < (segments + 1); i++)
-        {
-            x = Mathf.Sin (Mathf.Deg2Rad * angle) * Radius;
-            z = Mathf.Cos (Mathf.Deg2Rad * angle) * Radius;
-            PlaneForCircle.line.SetPosition (i,new Vector3(x,0,z) );
-            angle += (360f / segments);
-        }
-    }
-    public CGA.CGA CircletoSphere(){
-        FindIcUsingCircle5D();
-        var Sphere5D = Circle5D * Ic * I5;
-        return Sphere5D;
-    }
-    public void initialiseCircle(){
-        CreateCircle5DusingThreePoints();
-        FindIcUsingCircle5D();
-        UpdateCircleRadius();
-        UpdateCircleCentre();
-        CreateCirclePlaneObjOnScene();
-        drawCircleOnPlaneOnScene();}
-
-}
 
     public class Point{
         public Vector3 Point3D= new Vector3(0,0,0); public CGA.CGA Point5D; public CGA.CGA PointTwoBlades; // PointTwoBlades is the result of intersection of a plane and a line
@@ -228,6 +156,115 @@ public class Line{
     }
 
     }
+public class Circle{
+    public Vector3 Centre;public float Radius;
+    public Vector3 PointA;public Vector3 PointB;public Vector3 PointC;
+    public CGA.CGA Circle5D;public CGA.CGA Ic; //plane on which the circle lies
+    public Plane PlaneForCircle;public int segments=50;
+    // member function or method
+    public void CreateCircle5DusingThreePoints(){   //or should it be called "Update"?
+        CGA.CGA A = up(PointA.x, PointA.y, PointA.z);
+        CGA.CGA B = up(PointB.x, PointB.y, PointB.z);
+        CGA.CGA C = up(PointC.x, PointC.y, PointC.z);
+        Circle5D = A ^ B ^ C;}
+    public void UpdateCircleCentre(){   
+        CGA.CGA CGAVector2 = down(Circle5D * ei * Circle5D);
+        Centre= new Vector3(CGAVector2[1], CGAVector2[2], CGAVector2[3]);
+    }
+    public void UpdateCircleandCircle5DfromCircleObj(){
+        Centre=PlaneForCircle.PlaneGameObj.transform.position;
+        Radius=PlaneForCircle.PlaneGameObj.transform.localScale.x; // need to make sure same x,y,z values for localScale    
+        PlaneForCircle.GameObjPlaneToPlane5D();
+        Ic=PlaneForCircle.Plane5D;
+        CGA.CGA SpherebyCircle=Generate5DSpherebyCandRou(Centre, Radius);
+        Circle5D=Intersection5D(SpherebyCircle, Ic);
+    }
+    public void FindIcUsingCircle5D(){
+        //find the plane on which the circle lies
+        Ic = (ei ^ Circle5D).normalized();
+        }
+    public void UpdateCircleRadius(){  
+        var Circle5D_star2 = normalise_pnt_minus_one(Circle5D*Ic);
+        float CircleRadiusSqr = (Circle5D_star2 * Circle5D_star2)[0];
+        Radius= Mathf.Sqrt(Math.Abs(CircleRadiusSqr));
+    }
+    public void CreateCirclePlaneObjOnScene(){
+        //create the plane object on which the circle lie
+        PlaneForCircle=new Plane();
+        PlaneForCircle.Plane5D=Ic;
+        PlaneForCircle.GetPlaneNormal();
+        PlaneForCircle.centrePoint=Centre;
+        PlaneForCircle.UpdateGameObjPlane();
+    }
+
+    public void drawCircleOnPlaneOnScene(){
+        
+        //draw the circle on the plane it lies on.
+        PlaneForCircle.segments=segments;
+        PlaneForCircle.SetUpLineRenderOnPlaneObj(false);
+        PlaneForCircle.line = PlaneForCircle.PlaneGameObj.GetComponent<LineRenderer>();
+        float x;
+        float z;
+        float angle = 2f;
+        for (int i = 0; i < (segments + 1); i++)
+        {
+            x = Mathf.Sin (Mathf.Deg2Rad * angle) * Radius;
+            z = Mathf.Cos (Mathf.Deg2Rad * angle) * Radius;
+            PlaneForCircle.line.SetPosition (i,new Vector3(x,0,z) );
+            angle += (360f / segments);
+        }
+    }
+    public CGA.CGA CircletoSphere(){
+        FindIcUsingCircle5D();
+        var Sphere5D = Circle5D * Ic * I5;
+        return Sphere5D;
+    }
+    public void initialiseCircle(){
+        CreateCircle5DusingThreePoints();
+        FindIcUsingCircle5D();
+        UpdateCircleRadius();
+        UpdateCircleCentre();
+        CreateCirclePlaneObjOnScene();
+        drawCircleOnPlaneOnScene();}
+
+}
+
+public class Sphere{
+    public Vector3 Centre;public float Radius;
+    public Vector3 PointA;public Vector3 PointB;public Vector3 PointC;public Vector3 PointD; // the initial defining points may need to be updated later! or just remove them..
+    public CGA.CGA Sphere5D; public GameObject SphereObj=GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+    public void FindSphere5Dfrom4Points(Vector3 a,Vector3 b,Vector3 c,Vector3 d){
+        PointA=a;PointB=b;PointC=c;PointD=d;
+        var A = up(a.x, a.y, a.z);var B = up(b.x, b.y, b.z);var C = up(c.x, c.y, c.z);var D = up(d.x, d.y, d.z);
+        Sphere5D = A ^ B ^ C ^ D;
+    }
+    public void FindSphere5DbyCandRou(){
+        CGA.CGA Centre5D=up(Centre.x, Centre.y, Centre.z);
+        Sphere5D= !(Centre5D+(-0.5f)*Radius*Radius*ei);
+    }
+
+    public void findSphereCentrefromSphere5D(){
+        CGA.CGA CGAVector = Sphere5D * ei * Sphere5D;
+		CGA.CGA CGAVector2 = down(CGAVector);
+		Centre= new Vector3(CGAVector2[1], CGAVector2[2], CGAVector2[3]);
+    }
+    public void findSphereRadius(){
+        CGA.CGA Sphere5D_nD = normalise_pnt_minus_one(!Sphere5D);
+        float SphereRadiusSqr= (Sphere5D_nD * Sphere5D_nD)[0];
+        Radius= Mathf.Sqrt(SphereRadiusSqr);
+    }
+    public void GenerateGameObjSphere(){
+        SphereObj.transform.position = Centre;
+        SphereObj.transform.localScale = new Vector3(1, 1, 1) * Radius * 2;
+    }
+    public void UpdateSphereFromObj(){
+        Centre=SphereObj.transform.position;
+        Radius=SphereObj.transform.localScale.x/2;
+        FindSphere5DbyCandRou();
+    }
+
+}
 
 public class ClassCircleTry : MonoBehaviour
 {   public static Circle Circle1;
@@ -261,27 +298,24 @@ public class ClassCircleTry : MonoBehaviour
         
 
         CircleAndLineIntersect=(!((!Line1.Line5D)^(!Circle1.Circle5D)));
-        //Debug.Log(CircleAndLineIntersect);
         Debug.Log(CircleAndLineIntersect*CircleAndLineIntersect);
-        // IntersectPoint1.PointTwoBlades=CircleAndLineIntersect;
-        // IntersectPoint1.Extract5DPointfromTwoBlade();
-        // Debug.Log(IntersectPoint1.PointTwoBlades);
-
-        
-        // if (((CircleAndLineIntersect[1])<=valve)&((CircleAndLineIntersect[2])<=valve)&((CircleAndLineIntersect[3])<=valve)&((CircleAndLineIntersect[4])<=valve)&((CircleAndLineIntersect[5])<=valve)){
-        //     Debug.Log(2);
-        //     IntersectPoint1.PointObj.active = true;
-        //     IntersectPoint2.PointObj.active = true;
-        //     IntersectPoint1.Point5D=ExtractPntAfromPntPairs(CircleAndLineIntersect);
-        //     IntersectPoint2.Point5D=ExtractPntBfromPntPairs(CircleAndLineIntersect);
-        //     IntersectPoint1.FindPoint3Dfrom5D();
-        //     IntersectPoint2.FindPoint3Dfrom5D();
-        //     IntersectPoint1.UpdatePointObject();
-        //     IntersectPoint2.UpdatePointObject();
-        // }
-        if (pnt_to_scalar_pnt(CircleAndLineIntersect*CircleAndLineIntersect)<valve){
-
-            //Debug.Log(1);
+        var mag=CircleAndLineIntersect[1]*CircleAndLineIntersect[1]+CircleAndLineIntersect[2]*CircleAndLineIntersect[2]
+        +CircleAndLineIntersect[3]*CircleAndLineIntersect[3]+CircleAndLineIntersect[4]*CircleAndLineIntersect[4]
+        +CircleAndLineIntersect[5]*CircleAndLineIntersect[5];
+        if (mag<valve){
+            //two intersections
+            CGA.CGA Sphere1byCircle1=Circle1.CircletoSphere();
+            CGA.CGA IntersectPointPair5D = Intersection5D(Sphere1byCircle1, Line1.Line5D);
+            IntersectPoint1.PointObj.active = true;
+            IntersectPoint2.PointObj.active = true;
+            IntersectPoint1.Point5D=ExtractPntAfromPntPairs(IntersectPointPair5D);
+            IntersectPoint2.Point5D=ExtractPntBfromPntPairs(IntersectPointPair5D);
+            IntersectPoint1.FindPoint3Dfrom5D();
+            IntersectPoint2.FindPoint3Dfrom5D();
+            IntersectPoint1.UpdatePointObject();
+            IntersectPoint2.UpdatePointObject();
+        }
+        else if (pnt_to_scalar_pnt(CircleAndLineIntersect*CircleAndLineIntersect)<valve){
             //One intersection
             IntersectPoint1.PointObj.active = true;
             IntersectPoint2.PointObj.active = false;
@@ -294,8 +328,6 @@ public class ClassCircleTry : MonoBehaviour
             IntersectPoint1.PointObj.active = false;
             IntersectPoint2.PointObj.active = false;
         }
-
-
     }
     
     // Update is called once per frame
@@ -311,13 +343,9 @@ public class ClassCircleTry : MonoBehaviour
                 +CircleAndLineIntersect[3]*CircleAndLineIntersect[3]+CircleAndLineIntersect[4]*CircleAndLineIntersect[4]
                 +CircleAndLineIntersect[5]*CircleAndLineIntersect[5];
         Debug.Log(mag);
-        if (mag<valve){
-            Debug.Log(2);
-            
+        if (mag<valve){//two intersections
             CGA.CGA Sphere1byCircle1=Circle1.CircletoSphere();
-            // CircleAndLineIntersect=(!((!Line1.Line5D)^(!(Circle1.Circle5D^ei))));
-            CGA.CGA IntersectPointPair5D = Intersection5D(Sphere1byCircle1, Line1.Line5D);
-
+            CGA.CGA IntersectPointPair5D = Intersection5D(Sphere1byCircle1, Line1.Line5D);            
             IntersectPoint1.PointObj.active = true;
             IntersectPoint2.PointObj.active = true;
             IntersectPoint1.Point5D=ExtractPntAfromPntPairs(IntersectPointPair5D);
@@ -336,9 +364,7 @@ public class ClassCircleTry : MonoBehaviour
             IntersectPoint1.FindPoint3Dfrom5D();
             IntersectPoint1.UpdatePointObject();
             }
-
         else{
-            //Debug.Log(0);
             IntersectPoint1.PointObj.active = false;
             IntersectPoint2.PointObj.active = false;
         }

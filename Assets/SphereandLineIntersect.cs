@@ -7,7 +7,6 @@ using System;
 
 public class SphereandLineIntersect : MonoBehaviour
 {
-
     private static Vector3 pnt_a = new Vector3(1f, 0, 0);
     private static Vector3 pnt_b = new Vector3(0, 1f, 0);
     private static Vector3 pnt_c = new Vector3(0, 0, 1f);
@@ -61,7 +60,7 @@ public class SphereandLineIntersect : MonoBehaviour
         LineVertix2Renderer = LineVertix2.GetComponent<Renderer>();
         LineVertix2Renderer.material.color= new Color(0,1.0f,0,0);
 
-        line = SphereObj1.AddComponent<LineRenderer>();
+        line = LineVertix1.AddComponent<LineRenderer>();
         Color c1 = Color.white;
         line.SetVertexCount (segments + 1);
         line.SetColors(c1, c1);
