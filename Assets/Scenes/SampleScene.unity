@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 409246993}
   - component: {fileID: 409246994}
   - component: {fileID: 409246995}
+  - component: {fileID: 409246996}
   m_Layer: 0
   m_Name: Capsule-Intersection Manager
   m_TagString: Untagged
@@ -418,7 +419,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 409246982}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc59e1412a5dae444b296f7cf1a1edc9, type: 3}
   m_Name: 
@@ -430,9 +431,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 409246982}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1be0f8b07ae8af3409a63840935a99c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &409246996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409246982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67fc2b232a70c6a4695317276538235b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &705507993
