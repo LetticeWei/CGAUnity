@@ -91,7 +91,11 @@ public class PlaneandLineIntersect : MonoBehaviour
 
         if (pnt_to_scalar_pnt(IntersectPoint5D*IntersectPoint5D)>0){
             IntersectPointObj.active = true;
-            var IntersectionPnt3D=pnt_to_vector(ExtractPntfromTwoBlade(IntersectPoint5D));
+            Vector3 IntersectionPnt3D;
+            if (IntersectPoint5D[15]<0){
+                IntersectionPnt3D=pnt_to_vector(ExtractPntfromTwoBlade(IntersectPoint5D));}
+            else{IntersectionPnt3D=pnt_to_vector(ExtractPntfromTwoBlade(-1f*IntersectPoint5D));}
+
             IntersectPointObj.transform.position = IntersectionPnt3D;
             
             }
