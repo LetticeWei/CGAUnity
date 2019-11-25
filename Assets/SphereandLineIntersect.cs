@@ -7,13 +7,13 @@ using System;
 
 public class SphereandLineIntersect : MonoBehaviour
 {
-    private static Vector3 pnt_a = new Vector3(1f, 0, 0);
-    private static Vector3 pnt_b = new Vector3(0, 1f, 0);
-    private static Vector3 pnt_c = new Vector3(0, 0, 1f);
-    private static Vector3 pnt_d = new Vector3(-1f, 0, 0);
+    private static Vector3 pnt_a = new Vector3(10f, 0, 0);
+    private static Vector3 pnt_b = new Vector3(9f, 1f, 0);
+    private static Vector3 pnt_c = new Vector3(9f, 0, 1f);
+    private static Vector3 pnt_d = new Vector3(8f, 0, 0);
 
-    private static Vector3 pnt_e = new Vector3(3.5f, 0, 0);
-    private static Vector3 pnt_f = new Vector3(0, -6f, 0);
+    private static Vector3 pnt_e = new Vector3(12.5f, 0, 0);
+    private static Vector3 pnt_f = new Vector3(9f, -6f, 0);
 
     LineRenderer line;
     private static int segments = 1;

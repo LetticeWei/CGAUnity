@@ -7,11 +7,11 @@ using System;
 
 public class PlaneandLineIntersect : MonoBehaviour
 {
-    private static Vector3 pnt_a = new Vector3(1f, 0, 4f);
-    private static Vector3 pnt_b = new Vector3(0, 1f, 4f);
-    private static Vector3 pnt_c = new Vector3(0, 0, 5f);
-    private static Vector3 pnt_e = new Vector3(0, 3.5f, 0);
-    private static Vector3 pnt_f = new Vector3(0, 0, -6f);
+    private static Vector3 pnt_a = new Vector3(-9f, 0, 14f);
+    private static Vector3 pnt_b = new Vector3(-10f, 1f, 14f);
+    private static Vector3 pnt_c = new Vector3(-10f, 0, 15f);
+    private static Vector3 pnt_e = new Vector3(-10f, 3.5f, 10f);
+    private static Vector3 pnt_f = new Vector3(-10f, 0, 4f);
 
     private static CGA.CGA Plane5D1;
     private static GameObject PlaneObj1;

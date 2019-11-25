@@ -278,16 +278,16 @@ public class ClassCircleTry : MonoBehaviour
     void Start()
     {   //intersect line and circle
         Line1=new Line();
-        Line1.Vertex1.Point3D=new Vector3(0, 1.0f, 2f);
-        Line1.Vertex2.Point3D=new Vector3(0, 1.0f,-2f);
+        Line1.Vertex1.Point3D=new Vector3(-2f, 1.0f, 7f);
+        Line1.Vertex2.Point3D=new Vector3(-2f, 1.0f,3f);
         Line1.SetupVertexObj();
         Line1.UpdateLine5DfromVertices();
         Line1.SetUpLineRenderer();
 
         Circle1=new Circle();
-        Circle1.PointA=new Vector3(1f, 0, 0);
-        Circle1.PointB=new Vector3(0, 1f, 0);
-        Circle1.PointC=new Vector3(-1f, 0, 0);
+        Circle1.PointA=new Vector3(-1f, 0, 5f);
+        Circle1.PointB=new Vector3(-2f, 1f, 5f);
+        Circle1.PointC=new Vector3(-3f, 0, 5f);
         Circle1.initialiseCircle();
 
         IntersectPoint1=new Point();

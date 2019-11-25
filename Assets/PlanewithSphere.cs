@@ -15,14 +15,14 @@ public class PlanewithSphere : MonoBehaviour
     private static GameObject PlaneObjIntersect;
 
         // use four points to define a sphere
-    private static Vector3 pnt_a = new Vector3(1f, 0, 6f);
-    private static Vector3 pnt_b = new Vector3(0, 1f, 6f);
-    private static Vector3 pnt_c = new Vector3(0, 0, 7f);
-    private static Vector3 pnt_d = new Vector3(-1f, 0, 6f);
+    private static Vector3 pnt_a = new Vector3(1f, -10f, 6f);
+    private static Vector3 pnt_b = new Vector3(0, -9f, 6f);
+    private static Vector3 pnt_c = new Vector3(0, -10f, 7f);
+    private static Vector3 pnt_d = new Vector3(-1f, -10f, 6f);
     // another three points to define a plane
-    private static Vector3 pnt_e = new Vector3(1f, 0,6f);
-    private static Vector3 pnt_f = new Vector3(0, 1f, 6f);
-    private static Vector3 pnt_g = new Vector3(0, 0, 7f);
+    private static Vector3 pnt_e = new Vector3(1f, -10f,6f);
+    private static Vector3 pnt_f = new Vector3(0, -9f, 6f);
+    private static Vector3 pnt_g = new Vector3(0, -10f, 7f);
 
     Renderer PlaneRendererIntersect;
     LineRenderer line;

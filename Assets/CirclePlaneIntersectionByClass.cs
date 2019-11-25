@@ -17,13 +17,13 @@ public class CirclePlaneIntersectionByClass : MonoBehaviour
     void Start()
     {
         Circle1 =new Circle();
-        Circle1.PointA=new Vector3(1f, 0, -5f);
-        Circle1.PointB=new Vector3(0, 1f, -5f);
-        Circle1.PointC=new Vector3(-1f, 0, -5f);
+        Circle1.PointA=new Vector3(1f, 0, -15f);
+        Circle1.PointB=new Vector3(0, 1f, -15f);
+        Circle1.PointC=new Vector3(-1f, 0, -15f);
         Circle1.initialiseCircle();
 
         Plane1= new Plane();
-        Plane1.FindPlane5DbyThreePoints(new Vector3(0, 1f, -5f),new Vector3(1f, 0, -5f),new Vector3(0, -1f, 0));
+        Plane1.FindPlane5DbyThreePoints(new Vector3(0, 1f, -15f),new Vector3(1f, 0, -15f),new Vector3(0, -1f, -12f));
         Plane1.GetPlaneNormal();
         Plane1.UpdateGameObjPlane();
 

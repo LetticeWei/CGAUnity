@@ -19,13 +19,13 @@ public class CircleSphereIntersectByClass : MonoBehaviour
     void Start()
     {
         Circle1=new Circle();
-        Circle1.PointA=new Vector3(1f, 0, 5f);
-        Circle1.PointB=new Vector3(0, 1f, 5f);
-        Circle1.PointC=new Vector3(-1f, 0, 5f);
+        Circle1.PointA=new Vector3(1f, -6f, 5f);
+        Circle1.PointB=new Vector3(0, -5f, 5f);
+        Circle1.PointC=new Vector3(-1f, -6f, 5f);
         Circle1.initialiseCircle();
         
         Sphere1=new Sphere();
-        Sphere1.FindSphere5Dfrom4Points(new Vector3(0, 0, 5f),new Vector3(2f, 0, 5f),new Vector3(1f, 1f, 5f),new Vector3(1f, 0, 6f));
+        Sphere1.FindSphere5Dfrom4Points(new Vector3(0, -6f, 5f),new Vector3(2f, -6f, 5f),new Vector3(1f, -5f, 5f),new Vector3(1f, -6f, 6f));
         Sphere1.findSphereCentrefromSphere5D();
         Sphere1.findSphereRadius();
         Sphere1.GenerateGameObjSphere();

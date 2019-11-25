@@ -17,17 +17,17 @@ public class CircleCircleIntersectByClass : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {   // if the circles lie on the same plane then this may not work!!!!
+    {   // if the circles lie on the same d550plane then this may not work!!!!
         Circle1 =new Circle();
-        Circle1.PointA=new Vector3(1f, 0, -5f);
-        Circle1.PointB=new Vector3(0, 1f, -5f);
-        Circle1.PointC=new Vector3(-1f, 0, -5f);
+        Circle1.PointA=new Vector3(1f, 10f, -25f);
+        Circle1.PointB=new Vector3(0, 11f, -25f);
+        Circle1.PointC=new Vector3(-1f, 10f, -25f);
         Circle1.initialiseCircle();
 
         Circle2 =new Circle();
-        Circle2.PointA=new Vector3(1.5f, 0, -5f);
-        Circle2.PointB=new Vector3(0, 1.5f, -6f);
-        Circle2.PointC=new Vector3(-0.5f, 0, -5f);
+        Circle2.PointA=new Vector3(1.5f, 10f, -25f);
+        Circle2.PointB=new Vector3(0, 11.5f, -26f);
+        Circle2.PointC=new Vector3(-0.5f, 10f, -25f);
         Circle2.initialiseCircle();
 
         CCInersectPoint1=new Point();

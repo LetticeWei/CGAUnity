@@ -10,11 +10,11 @@ public class PlaneLineIntersectUsingClass : MonoBehaviour
     public static Plane Plane1;
     public static Line Line1;
     public static Point Intersection1; 
-    private static Vector3 pnt_c = new Vector3(1f, 0, 4f);
-    private static Vector3 pnt_d = new Vector3(0, 1f, 4f);
-    private static Vector3 pnt_a = new Vector3(0, 0, 5f);
-    private static Vector3 pnt_b = new Vector3(0, 3.5f, 0);
-    private static Vector3 pnt_e = new Vector3(0, 0, -6f);
+    private static Vector3 pnt_c = new Vector3(10f, 0, 14f);
+    private static Vector3 pnt_d = new Vector3(10f, 1f, 14f);
+    private static Vector3 pnt_a = new Vector3(10f, 0, 15f);
+    private static Vector3 pnt_b = new Vector3(10f, 3.5f, 10f);
+    private static Vector3 pnt_e = new Vector3(10f, 0, 4f);
     // Start is called before the first frame update
     void Start()
     {   //set up the plane

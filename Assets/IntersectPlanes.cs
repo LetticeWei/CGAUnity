@@ -14,14 +14,14 @@ public class IntersectPlanes : MonoBehaviour
     private static GameObject PlaneObj2;
 
     // use four points to define a sphere
-    private static Vector3 pnt_a = new Vector3(1f, 0, 0);
-    private static Vector3 pnt_b = new Vector3(0, 1f, 0);
-    private static Vector3 pnt_c = new Vector3(0, 0, 1f);
+    private static Vector3 pnt_a = new Vector3(1f, 10f, -10f);
+    private static Vector3 pnt_b = new Vector3(0, 11f, -10f);
+    private static Vector3 pnt_c = new Vector3(0, 10f, -9f);
 
     // another four points to define another sphere
-    private static Vector3 pnt_e = new Vector3(1f, 0, 0.5f);
-    private static Vector3 pnt_f = new Vector3(0, 1f, 0.5f);
-    private static Vector3 pnt_g = new Vector3(0, 0, 3f);
+    private static Vector3 pnt_e = new Vector3(1f, 10f, -9.5f);
+    private static Vector3 pnt_f = new Vector3(0, 11f, -9.5f);
+    private static Vector3 pnt_g = new Vector3(0, 10f, -7f);
 
     public CGA.CGA GameObjPlaneToPlane5D(GameObject PlaneObj){
         var norm = vector_to_pnt(PlaneObj.transform.up);

@@ -17,13 +17,13 @@ public class LineLineIntersectionByClass : MonoBehaviour
     void Start()
     {
         Line1=new Line();
-        Line1.SetUpVertices3Dand5D(new Vector3(0, 1.0f, 2f),new Vector3(0, 1.0f,-2f));
+        Line1.SetUpVertices3Dand5D(new Vector3(4f, 11f, 2f),new Vector3(4f, 11f,-2f));
         Line1.SetupVertexObj();
         Line1.FindLine5DfromVertices5D();
         Line1.SetUpLineRenderer();
 
         Line2=new Line();
-        Line2.SetUpVertices3Dand5D(new Vector3(0, 3f, 1f),new Vector3(0, -3f,1f));
+        Line2.SetUpVertices3Dand5D(new Vector3(4f, 13f, 1f),new Vector3(4f, 7f,1f));
         Line2.SetupVertexObj();
         Line2.FindLine5DfromVertices5D();
         Line2.SetUpLineRenderer();
