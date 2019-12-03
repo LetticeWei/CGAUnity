@@ -4,11 +4,40 @@ using UnityEngine;
 using CGA;
 using static CGA.CGA;
 using System;
-public class Plane{
+
+
+
+public class Geometry2{
+    public  GameObject thisGameObject;
+    // constructor here:
+    public Geometry2(){
+    }
+}
+
+public class PlaneTry:Geometry2{
+    public float type_index;
+    public PlaneTry(float type_index) :
+                     base()
+    {
+    this.thisGameObject=GameObject.CreatePrimitive(PrimitiveType.Plane);
+    this.thisGameObject.transform.position=new Vector3(1f,2f,3f);
+    this.type_index=type_index;
+    }
+
+}
+public class Geometry{
+    public  GameObject PlaneGameObj;
+    public Geometry(){
+    }
+    }
+public class Plane:Geometry {
     public Vector3 norm;public Vector3 centrePoint;public CGA.CGA centrePoint5D;public float DistToOrigin;
     public CGA.CGA Plane5D; public Vector3 a;public Vector3 b;public Vector3 c;
-    public GameObject PlaneGameObj=GameObject.CreatePrimitive(PrimitiveType.Plane);
     public LineRenderer line;public int segments;
+
+    public Plane():base(){
+        this.PlaneGameObj=GameObject.CreatePrimitive(PrimitiveType.Plane);
+    }
 
     public void FindPlane5DbyThreePoints(Vector3 pnt_a, Vector3 pnt_b, Vector3 pnt_c){
         a=pnt_a;b=pnt_b;c=pnt_c;
@@ -31,12 +60,12 @@ public class Plane{
         var rot_plane=(e2^(norm[0]*e1+norm[1]*e2+norm[2]*e3)).normalized();
         CGA.CGA R = GenerateRotationRotor(theta,rot_plane);
         //above: previous 'SetRotParamforPlane'
-        PlaneGameObj.transform.rotation = RotorToQuat(R);
+        this.PlaneGameObj.transform.rotation = RotorToQuat(R);
         // centrePoint=a;
-        PlaneGameObj.transform.position = centrePoint;
+        this.PlaneGameObj.transform.position = centrePoint;
     }
     public void SetUpLineRenderOnPlaneObj(bool use_world_space){
-        line = PlaneGameObj.AddComponent<LineRenderer>();
+        line = this.PlaneGameObj.AddComponent<LineRenderer>();
 
         Gradient gradient = new Gradient();
         float alpha=1.0f;
@@ -58,12 +87,12 @@ public class Plane{
         line.widthCurve=curve;
         line.useWorldSpace = use_world_space;}
     public void GameObjPlaneToPlane5D(){
-        CGA.CGA norm5D = vector_to_pnt(PlaneGameObj.transform.up);
-        DistToOrigin = (vector_to_pnt(PlaneGameObj.transform.position)|norm5D)[0];
+        CGA.CGA norm5D = vector_to_pnt(this.PlaneGameObj.transform.up);
+        DistToOrigin = (vector_to_pnt(this.PlaneGameObj.transform.position)|norm5D)[0];
         Plane5D = !(norm5D + DistToOrigin*ei);}
 }
 
-    public class Point{
+    public class Point:Geometry{
         public Vector3 Point3D= new Vector3(0,0,0); public CGA.CGA Point5D; public CGA.CGA PointTwoBlades; // PointTwoBlades is the result of intersection of a plane and a line
         public GameObject PointObj= GameObject.CreatePrimitive(PrimitiveType.Sphere);
         public Renderer PointObjRenderer;
@@ -92,7 +121,7 @@ public class Plane{
             PointObj.transform.position=Point3D;
         }
     }
-public class Line{
+public class Line:Geometry{
     public Point Vertex1=new Point();public Point Vertex2=new Point(); public CGA.CGA Line5D; public Vector3 LineDirection;
     public LineRenderer lineRenderer; public int segments=1;
     public void SetUpVertices3Dand5D(Vector3 pnt_a,Vector3 pnt_b){
@@ -156,7 +185,7 @@ public class Line{
     }
 
     }
-public class Circle{
+public class Circle:Geometry{
     public Vector3 Centre;public float Radius;
     public Vector3 PointA;public Vector3 PointB;public Vector3 PointC;
     public CGA.CGA Circle5D;public CGA.CGA Ic; //plane on which the circle lies
@@ -230,7 +259,7 @@ public class Circle{
 
 }
 
-public class Sphere{
+public class Sphere:Geometry{
     public Vector3 Centre;public float Radius;
     public Vector3 PointA;public Vector3 PointB;public Vector3 PointC;public Vector3 PointD; // the initial defining points may need to be updated later! or just remove them..
     public CGA.CGA Sphere5D; public GameObject SphereObj=GameObject.CreatePrimitive(PrimitiveType.Sphere);
