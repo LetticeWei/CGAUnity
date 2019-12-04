@@ -5,35 +5,17 @@ using CGA;
 using static CGA.CGA;
 using System;
 
-
-
-public class Geometry2{
-    public  GameObject thisGameObject;
-    // constructor here:
-    public Geometry2(){
-    }
-}
-
-public class PlaneTry:Geometry2{
-    public float type_index;
-    public PlaneTry(float type_index) :
-                     base()
-    {
-    this.thisGameObject=GameObject.CreatePrimitive(PrimitiveType.Plane);
-    this.thisGameObject.transform.position=new Vector3(1f,2f,3f);
-    this.type_index=type_index;
-    }
-
-}
 public class Geometry{
     public  GameObject PlaneGameObj;
+    public CGA.CGA Plane5D;
     public Geometry(){
     }
+    public virtual void GameObjPlaneToPlane5D(){}
     }
 public class Plane:Geometry {
     public Vector3 norm;public Vector3 centrePoint;public CGA.CGA centrePoint5D;public float DistToOrigin;
-    public CGA.CGA Plane5D; public Vector3 a;public Vector3 b;public Vector3 c;
-    public LineRenderer line;public int segments;
+    public Vector3 a;public Vector3 b;public Vector3 c;
+    public LineRenderer line;public int segments=1;
 
     public Plane():base(){
         this.PlaneGameObj=GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -41,15 +23,15 @@ public class Plane:Geometry {
 
     public void FindPlane5DbyThreePoints(Vector3 pnt_a, Vector3 pnt_b, Vector3 pnt_c){
         a=pnt_a;b=pnt_b;c=pnt_c;
-        Plane5D = up(a.x, a.y, a.z) ^ up(b.x, b.y, b.z) ^ up(c.x, c.y, c.z) ^ ei;
+        this.Plane5D = up(a.x, a.y, a.z) ^ up(b.x, b.y, b.z) ^ up(c.x, c.y, c.z) ^ ei;
 	}
 
     public void GetPlaneNormal(){
-        CGA.CGA n_roof=(!(Plane5D.normalized()))-((!Plane5D.normalized())|eo)*ei;
+        CGA.CGA n_roof=(!(this.Plane5D.normalized()))-((!this.Plane5D.normalized())|eo)*ei;
 		norm= pnt_to_vector(n_roof);
     }
     public void GetPlaneDist(){
-		DistToOrigin= (float) ((!Plane5D.normalized())|eo)[0];
+		DistToOrigin= (float) ((!this.Plane5D.normalized())|eo)[0];
 	}    
     public void UpdateGameObjPlane(){
         //rotation from old plane normal (0,1,0) to norm
@@ -86,10 +68,10 @@ public class Plane:Geometry {
 
         line.widthCurve=curve;
         line.useWorldSpace = use_world_space;}
-    public void GameObjPlaneToPlane5D(){
+    public override void GameObjPlaneToPlane5D(){
         CGA.CGA norm5D = vector_to_pnt(this.PlaneGameObj.transform.up);
         DistToOrigin = (vector_to_pnt(this.PlaneGameObj.transform.position)|norm5D)[0];
-        Plane5D = !(norm5D + DistToOrigin*ei);}
+        this.Plane5D = !(norm5D + DistToOrigin*ei);}
 }
 
     public class Point:Geometry{
@@ -371,7 +353,7 @@ public class ClassCircleTry : MonoBehaviour
         var mag=CircleAndLineIntersect[1]*CircleAndLineIntersect[1]+CircleAndLineIntersect[2]*CircleAndLineIntersect[2]
                 +CircleAndLineIntersect[3]*CircleAndLineIntersect[3]+CircleAndLineIntersect[4]*CircleAndLineIntersect[4]
                 +CircleAndLineIntersect[5]*CircleAndLineIntersect[5];
-        Debug.Log(mag);
+        // Debug.Log(mag);
         if (mag<valve){//two intersections
             CGA.CGA Sphere1byCircle1=Circle1.CircletoSphere();
             CGA.CGA IntersectPointPair5D = Intersection5D(Sphere1byCircle1, Line1.Line5D);            
